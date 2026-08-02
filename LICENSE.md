@@ -1,0 +1,1 @@
+We have not finalized the license we'll use. I am not a lawyer, and thinking about the multiple licensed used by components of this project is hard (for me). We'll probably settle on (A)GPL; until a decision is made, I won't post any of the TeX code
