@@ -1,0 +1,106 @@
+\relax
+\taggingactive=1
+
+
+\tagstructbegin{H1}
+\tagproperty{ID}{dest1}
+The happy path
+\tagstructend
+
+This is a normal paragraph. It should be automatically wrapped in a P tag.
+It contains $x^2 + y^2 = z^2$ inline math, which should be wrapped in a Formula, and then math, mrow, msup, etc. Next will be some display math sitting on its own.
+
+$$ \int_0^\infty e^{-x} dx = 1 $$
+
+So far, so good.
+
+\tagstructbegin{H1}
+The happy path
+\tagstructend
+
+\tagstructbegin{P}
+This is a manual P tag.
+\tagstructbegin{P}
+This is a second manual P tag requested while the first is still open. 
+It should force the first P tag to close and open as a sibling.
+\tagstructend
+This text is floating after the second P tag closes.
+
+% Let's request an inline element outside of a P tag.
+\tagstructbegin{H2}
+Heading 2
+\tagstructend
+\tagstructbegin{Span}
+This Span is requested directly after an H2, when no P is open. It should implicitly spawn a P tag!
+\tagstructend
+
+\tagstructbegin{TOCI}
+\tagproperty{Ref}{dest1}
+\tagstructbegin{Reference}
+TOCI here
+\tagstructend
+\tagstructend
+
+\tagstructbegin{TD}
+TD element
+\tagstructend
+
+\tagstructbegin{Table}
+\tagstructbegin{TR}
+\tagstructbegin{P}
+This P tag just blew up the entire Table structure to save itself!
+\tagstructend
+
+\tagstructbegin{P}
+Paragraph started.
+\tagstructbegin{Span}
+Span started.
+\tagstructend
+Text after the list.
+
+\tagstructbegin{H3}
+Heading with $E=mc^2$ Math.
+\tagstructend
+
+\tagstructbegin{Table}
+\tagstructbegin{TBody}
+\tagstructbegin{TR}
+\tagstructbegin{TD}
+This table will never be explicitly closed!
+
+% \bye will happen while these are open.
+
+\beginsection The ua2plain Tagging Trip Test
+
+This document tests the integration of the ua2plain macros with the engine-driven PDF 2.0 tagging system.
+
+This paragraph contains some \emph{emphasized text}, some \textbf{strongly bolded text}, and some \texttt{monospace code}. They should be tagged appropriately.
+
+Here is a simple list:
+\beginlist
+\item{1.} The first item automatically closes the previous paragraph.
+\item{2.} The second item becomes a sibling LI under the shared L container.
+\itemitem{a.} A nested item should correctly nest... 
+Does our ua2plain schema handle nested \char`\\itemitem gracefully? Let's find out!
+\endlist
+
+Let's test footnotes. This text has a footnote\footnote{*}{This is the footnote text, which should be wrapped in a FENote structure.}.
+
+Let's test an insert.
+\begininsert{This is a very cool figure.}
+This is a midinsert. It should be wrapped in a Figure tag, with ``This is a very cool figure'' as the alt-tex
+\endinsert
+
+Let's test our table wrappers.
+\begintable
+\beginTH
+Header 1
+\endTH
+\beginTR
+\beginTD
+Data 1
+\endTD
+\endTR
+\endtable
+
+\bye

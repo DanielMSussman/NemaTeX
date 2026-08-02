@@ -1,0 +1,202 @@
+%to be compiled with the slides.fmt
+
+\pdfresettimer
+
+\setaspectratioXVIbyIX
+
+\titleslide{Tex82, but in C++23}{I wanted to call it ``Tex28,'' but don't have enough hubris}
+
+\beginslide{The PageIR Concept}
+    \beginrow
+        \begincol
+            \subheading{The architecture}
+            \vskip 20pt
+            During shipout we intercept commands and build an intermediate representation of each page. Different generators are then responsible for weaving these back together into output files (potentially asynchronously).
+    \pause
+
+            By decoupling the typesetting engine from the DVI byte stream, we get a lot of flexibility here. Eventually I'd like to build internal IR at an even earlier stage.
+        \endcol
+        \pause
+        \begincol
+            \subheading{The output generators}
+            \vskip 20pt
+            We currently have versions of DVI, PDF, and HTML output.
+            \vskip 20pt
+            Not all features are yet equally completely implemented across the generators... still working on it.
+        \endcol
+    \endrow
+
+    \pause
+    \vskip 15pt
+    {\bodyfonti
+    Here's an example of color manipulation: text on top of a slightly transparent background. \pushcolor 0 0 0 125 Color opacity \popcolor is an example of a feature that the pdf and html generators need to handle in different ways.
+    }
+    \pause
+    \vskip 30pt
+
+    \begincodeblock
+    {
+    \kanagawaViolet while\ \popcolor \kanagawaParen (\popcolor{}\kanagawaWhite current\_state\ \popcolor \kanagawaOp !=\ \popcolor \kanagawaOrange STATE\_DONE\popcolor\kanagawaParen )\popcolor
+    \vskip 3pt
+    \ \ \ \ \kanagawaViolet switch\ \popcolor\kanagawaParen(\popcolor{}\kanagawaWhite current\_state\popcolor\kanagawaParen )
+    \vskip 3pt
+    \ \ \ \ \ \ \ \ \{
+    \vskip 3pt
+    \ \ \ \ \ \ \ \ \kanagawaComment // ...\popcolor
+    \vskip 3pt
+    \ \ \ \ \ \ \ \ \}
+    }
+    \popcolor
+    \endcodeblock
+
+    \centerline{Code snippet from the {\bodycode executor.cpp} file {\bodyfont(``kanagawa.nvim'' colors)}}
+\endslide
+
+\beginslide{The \green ``slides'' \endcolor format}
+    \beginrow
+        % Left side: Standard column (Depth 1)
+        \begincol
+            \beginblock
+                \subheading{The ``slides'' format}
+                \vskip 20pt 
+                {\bodyfonti This was compiled using a custom format file based on {\tt ua2plain} (which is mostly just the plain format, but updated to use modern OTF fonts).}
+            \endblock
+            \pause
+            \beginblock
+                \subheading{Slide scaling}
+                \vskip 20pt
+                {\bodyfonti
+                While the format is output-agnostic, targeting HTML unlocks specific bells and whistles -- like responsive {\it auto-scaling}.
+                Here we are testing this, using slides set to a 16:9 aspect ratio.
+                
+                \vskip 20pt
+                I deliberately made the above monospace and italic fonts small relative to the serif font to ensure the linebreaking respects the measured boxes.
+                }
+            \endblock
+        \endcol
+        
+        \pause
+        \begincol
+            \beginblock
+                \subheading{Interactivity}
+                \vskip 15pt
+                {\bodyfonti
+                It is {\bodyitalici easy} to inject javascript for, e.g., presentations. 
+                Here, you can navigate using the arrow keys, spacebar, clicking, or 
+                the mouse wheel. You've already seen simple css animations, etc.
+                }
+            \endblock
+            \pause
+            \beginblock
+                \subheading{Layout of slides}
+                \vskip 20pt
+                \beginrow
+                    \begincol
+                    This is a simple layout system.  It would be nice if the layouts were composable, so can we nest some columns in rows in blocks inside columns inside rows?
+                    \endcol
+                    \pause
+                    \begincol
+                    Of course, we can nest in this way, but do we really want to?
+                    That's less clear. The nested font sizes start getting pretty fussy.
+                    \endcol
+                \endrow
+            \endblock
+            
+        \endcol
+    \endrow
+\endslide
+
+
+\beginslide{Demo: Math}
+
+    One advantage, of course, is that we can actually write mathematical symbols as a combination of glyphs (for most things) and SVG paths (for things like extendable symbols whose pieces don't map to positive codepoints).
+
+    \pause
+
+    $$ \int_0^x\sqrt{1 \over 2} dx  = \root n \of {\left( \alpha^4_\beta\right)} $$
+    $$ (\forall x\in \Re)(\exists y\in\Re)\ \ \ y>x$$
+    $$\nabla^2 f(x,y) = {\partial^2 f \over\partial x^2}$$ 
+
+    \vskip 20pt
+    \centerline{Among other things: our mathematics can be copy-pastable.}
+    \vskip 20pt
+    When semantic html is finished, there will be mathML tags here, just as there already are in the ua2-compliant pdfs.
+    \vskip 20pt
+    \pause
+    And yes, I also see that visual bug with the placement of the vinculum... unicode math is hard, and for some reason this has been a particularly difficult bug to track down and fix.
+    \vskip 20pt
+    \pause
+    $$ 1+ 1 = \pause 2$$
+\endslide
+
+\beginslide{Demo: Embedding assets}
+    \beginrow
+        \begincol
+            \subheading{Embedding a PNG}
+            \vskip 40pt
+            {\noindent \kern 35pt \embedimage{testPNG.png}{436bp}{270bp}}
+            \vskip 20pt
+            \centerline{A remarkable plot!}
+        \endcol
+        \pause
+        \begincol
+            \subheading{Embedding an mp4}
+            \vskip 20pt
+            {\noindent \kern 15pt \embedvideo{testVideo.mp4}{480bp}{270bp}}
+            \vskip 20pt
+            \pause
+            Having mp4 files in pdfs is very fussy... but for html it's trivial!
+        \endcol
+    \endrow
+\endslide
+
+\beginslide{New features and anti-features}
+    \beginrow
+        \begincol
+            \subheading{Pros}
+            \vskip 20pt
+            \fragment{1-4}{Is \TeX\ (Passes the TRIP test)}
+            \vskip 20pt
+            \fragment{1-4}{Tagging and accessibility at the engine level}
+            \vskip 20pt
+            \fragment{1-4}{Native support for tfm, otf, ttf fonts}
+            \vskip 20pt
+            \fragment{1-4}{Native support for generic output formats}
+            \vskip 20pt
+            \fragment{1-4}{Built with concurrency in mind}
+            \vskip 20pt
+            \fragment{1-4}{Modern(-ish) cpp instead of WEB/Pascal?}
+
+            \vskip -220pt
+            \fragment{5-}{\bodyitalici It has been fun to work on!}
+        \endcol
+        \begincol
+            \subheading{Cons}
+            \vskip 20pt
+            \fragment{2-}{e-tex extensions not finished (no LaTeX)}
+            \vskip 20pt
+            \fragment{3-}{Many, {\pushcolor 0 0 255 255 many\popcolor}, {\pushcolor 255 0 0 255 many\popcolor} improvements still needed}
+            \vskip 20pt
+            \fragment{4-}{No real documentation (yet). Not literate.}
+            \vskip 20pt
+            \fragment{5-}{Not written by Knuth}
+        \endcol
+
+    \endrow
+
+    \vskip 80pt
+    \centerline{\headingfont\kanagawaSpecialRed 
+    \fragment{5-}{%
+    \char"03FE
+    \char"0152\kern -9pt
+    O \kern -9pt
+    \char"013F
+    }
+    \popcolor
+    }
+\endslide
+
+
+\message{internal timer: \the\pdfelapsedtime\space scaled seconds!}
+
+\bye

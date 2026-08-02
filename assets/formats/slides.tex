@@ -1,0 +1,473 @@
+% slides.tex
+% A ua2plain TeX macro package for slides in nematex
+\input ua2plain
+
+\def\setaspectratioIVbyIII{%
+    \pdfpagewidth=1024pt
+    \pdfpageheight=768pt
+    \hsize=896pt     
+    \vsize=672pt     
+    \pdfhorigin=64pt 
+    \pdfvorigin=48pt 
+}
+
+\def\setaspectratioXVIbyIX{%
+    \pdfpagewidth=1280pt
+    \pdfpageheight=720pt
+    \hsize=1152pt    
+    \vsize=624pt     
+    \pdfhorigin=64pt 
+    \pdfvorigin=48pt 
+}
+
+% Default to 4:3
+\setaspectratioIVbyIII
+\nopagenumbers
+\parindent=0pt 
+
+% Preload standard weights and sizes
+\def\textfamily{FiraSans}
+\def\monofamily{JetBrainsMono}
+\def\mathfamily{STIXTwoMath}
+\font\titlefont=\textfamily-SemiBold.otf at 42pt
+\font\headingfont=\textfamily-SemiBold.otf at 36pt
+\font\subheadingfont=\textfamily-SemiBold.otf at 32pt
+
+
+\font\bodyfont=\textfamily-Regular.otf at 22pt
+\font\bodyfonti=\textfamily-Regular.otf at 18pt
+\font\bodyfontii=\textfamily-Regular.otf at 14pt
+
+\font\bodyitalic=\textfamily-Italic.otf at 22pt
+\font\bodyitalici=\textfamily-Italic.otf at 18pt
+\font\bodyitalicii=\textfamily-Italic.otf at 14pt
+
+\font\bodycode=\monofamily-Regular.otf at 22pt
+\font\bodycodei=\monofamily-Regular.otf at 18pt
+
+\font\mathnormal=\mathfamily-Regular.otf at 22pt
+
+\newcount\nestdepth \nestdepth=0
+
+\def\setgridfont{%
+    \ifnum\nestdepth=0 \bodyfont \baselineskip=26pt \else
+    \ifnum\nestdepth=1 \bodyfonti \baselineskip=22pt \else
+    \bodyfontii \baselineskip=18pt \fi\fi
+}
+
+\def\setnormal{%
+    \setgridfont
+    \textfont0=\mathnormal
+}
+\def\subheading#1{%
+    {\hfill \subheadingfont #1 \hfill}
+}
+
+% Initialize defaults
+\setnormal
+\baselineskip=24pt
+
+
+
+% Colors and Theming
+\def\pushrgb#1#2#3{\pushcolor #1 #2 #3 255 }
+\def\red{\pushrgb{138}{81}{77}}
+\def\blue{\pushrgb{34}{50}{73}}
+\def\green{\pushrgb{91}{101}{81}}
+\def\gray{\pushrgb{175}{175}{175}}
+
+\def\kanagawasumiink{\pushcolor 31 31 40 225}
+
+\def\kanagawaViolet{\pushrgb{149}{127}{184}}
+\def\kanagawaWhite{\pushrgb{220}{215}{186}}
+\def\kanagawaOrange{\pushrgb{255}{160}{102}}
+\def\kanagawaParen{\pushrgb{156}{171}{202}}
+\def\kanagawaOp{\pushrgb{192}{163}{110}}
+\def\kanagawaComment{\pushrgb{114}{113}{105}}
+\def\kanagawaSpecialRed{\pushrgb{200}{64}{83}}
+
+
+\def\endcolor{\popcolor}
+
+% Grid Registers
+\newdimen\colgap \colgap=40pt
+\newdimen\colwidth
+\newdimen\blockheight
+\newdimen\gridheight
+
+\def\calcgrid{%
+    \colwidth=\hsize 
+    \advance\colwidth by -\colgap 
+    \divide\colwidth by 2
+    
+    \blockheight=\gridheight 
+    \advance\blockheight by -\colgap 
+    \divide\blockheight by 2
+}
+
+\def\beginrow{\calcgrid \hbox to \hsize\bgroup\ignorespaces}
+\def\endrow{\unskip\egroup}
+
+\def\begincol{%
+    \vtop\bgroup 
+        \advance\nestdepth by 1  % Increment depth
+        \setgridfont             % Apply smaller font and baseline
+        \hsize=\colwidth 
+        \gridheight=\blockheight % Pass the constrained height down
+        \divide\colgap by 2      % Scale the gap down
+        \relax
+}
+\def\endcol{\egroup\hfil}
+
+\def\beginblock{%
+    \vtop to \blockheight\bgroup 
+        \advance\nestdepth by 1  
+        \setgridfont             
+        \hsize=\colwidth 
+        \gridheight=\blockheight 
+        \divide\colgap by 2      
+        \relax
+}
+\def\endblock{\vfil\egroup\vskip\colgap}
+
+%  Structural Macros and Tagging
+\newcount\slideno \slideno=0
+
+\def\titleslide#1#2{%
+    \global\advance\slideno by 1
+    \vglue 150pt
+    \centerline{\titlefont #1}
+    \vskip 30pt
+    \centerline{\subheadingfont \gray #2 \endcolor}
+    \vfill\eject
+}
+
+\def\beginslide#1{%
+    \global\advance\slideno by 1
+    % \vglue 16pt
+    \centerline{\headingfont \blue #1 \endcolor}
+    \vskip 10pt
+    \red \hrule width \hsize height 2pt depth 0pt \endcolor
+    \vskip 24pt
+    
+    % Calculate safe grid space: 40(vglue) + ~28(font) + 10(vskip) + 2(hrule) + 30(vskip) = 110pt
+    \gridheight=\vsize
+    \advance\gridheight by -80pt 
+    
+    \bgroup 
+    \nestdepth=0 % Ensure we start at base depth
+    \setgridfont
+}
+
+\newcount\stepcount
+\newcount\openfragments
+
+% Reset state at the start of a slide (assuming \beginslide or similar is used, wait, here we just do it in the file? No, we don't have \beginslide defined yet. Let's define it, or just do it in \endslide since \endslide is called.)
+% Actually, there is no \beginslide. The slide just starts. But the user manually might not call \beginslide. Let's just reset in \endslide for the next slide. Wait, the very first slide won't have them reset unless we initialize them to 0. They are 0 initially.
+\stepcount=0
+\openfragments=0
+
+\def\pause{%
+    \global\advance\stepcount by 1
+    \global\advance\openfragments by 1
+    \beginspecial{html:<div class="fragment" data-start="\the\stepcount">}%
+}
+
+\def\fragment#1#2{%
+    \beginspecial{html:<div class="fragment" data-steps="#1">}%
+    #2%
+    \endspecial{html:</div>}%
+}
+
+\def\autoclosefragments{%
+    \loop\ifnum\openfragments>0
+        \endspecial{html:</div>}%
+        \global\advance\openfragments by -1
+    \repeat
+}
+
+\def\endslide{%
+    \autoclosefragments
+    \global\stepcount=0
+    \global\openfragments=0
+    \egroup
+    \vfill\eject
+}
+
+% "code block" -- just overlay stuff on a specific background
+\def\begincodeblock{%
+    \par\vskip 15pt
+    \setbox0=\vbox\bgroup
+        \bodycode 
+        \parindent=0pt
+        \leftskip=40pt  % Left padding for the text
+        \rightskip=40pt % Right padding
+        \vskip 15pt     % Top padding
+        %code literal overrides
+        \def\{{\char`\{}
+        \def\}{\char`\}}
+        \def\\{\char`\\}
+        \def\_{\char`\_}
+        \def\#{\char`\#}
+        \def\%{\char`\%}
+        \def\&{\char`\&}
+        \def\^{\char`\^}
+        \def\~{\char`\~}
+        \def\${\char`\$}
+}
+
+\def\endcodeblock{%
+        \vskip 15pt     % Bottom padding
+    \egroup
+    
+    \noindent
+    \hbox to \hsize{%
+        {\kanagawasumiink \rlap{\vrule width \hsize height \ht0 depth \dp0}\popcolor}%
+        \box0
+        \hfil
+    }%
+    \par\vskip 15pt
+}
+
+% media wrappers
+\def\embedimage#1#2#3{% filename, width, height
+    \pdfximage{#1}%
+    \pdfrefximage \the\pdflastximage \space width #2 height #3%
+}
+
+\def\embedvideo#1#2#3{%
+    \embedimage{#1}{#2}{#3}%
+}
+
+% html/js/css injection configuration
+\long\def\readjs#1|endjs{\outputinject 0 {#1}\endgroup}
+\long\def\readcss#1|endcss{\outputinject 1 {#1}\endgroup}
+\long\def\readhtml#1|endhtml{\outputinject 2 {#1}\endgroup}
+
+\def\injectjs{%
+    \begingroup
+    \def\do##1{\catcode`##1=12 }\dospecials
+    \catcode`\^^M=12
+    \readjs
+}
+\def\injectcss{%
+    \begingroup
+    \def\do##1{\catcode`##1=12 }\dospecials
+    \catcode`\^^M=12
+    \readcss
+}
+\def\injecthtml{%
+    \begingroup
+    \def\do##1{\catcode`##1=12 }\dospecials
+    \catcode`\^^M=12
+    \readhtml
+}
+
+\injectjs
+<script>
+    let currentSlideIndex = parseInt(sessionStorage.getItem('currentSlideIndex')) || 0;
+    let currentFragmentIndex = 0;
+    const slides = document.querySelectorAll('.slide');
+
+    function parseSteps(el) {
+        if (el._parsedSteps) return el._parsedSteps;
+        let start = 0, end = Infinity;
+        if (el.hasAttribute('data-start')) {
+            start = parseInt(el.getAttribute('data-start'));
+        }
+        if (el.hasAttribute('data-end')) {
+            end = parseInt(el.getAttribute('data-end'));
+        }
+        if (el.hasAttribute('data-steps')) {
+            const parts = el.getAttribute('data-steps').split('-');
+            start = parseInt(parts[0]);
+            if (parts.length > 1 && parts[1]) end = parseInt(parts[1]);
+        }
+        el._parsedSteps = {start, end};
+        return el._parsedSteps;
+    }
+
+    function updateFragments() {
+        if (slides.length === 0) return;
+        const activeSlide = slides[currentSlideIndex];
+        const fragments = activeSlide.querySelectorAll('.fragment');
+        
+        fragments.forEach(el => {
+            const steps = parseSteps(el);
+            const shouldBeVisible = (currentFragmentIndex >= steps.start && currentFragmentIndex <= steps.end);
+            const isCurrentlyVisible = el.classList.contains('visible');
+
+            if (shouldBeVisible && !isCurrentlyVisible) {
+                // Fragment just became visible
+                el.classList.add('visible');
+                el.querySelectorAll('video').forEach(vid => {
+                    vid.currentTime = 0; // Restart video
+                    vid.play().catch(e => console.warn("Autoplay blocked:", e));
+                });
+            } else if (!shouldBeVisible && isCurrentlyVisible) {
+                // Fragment just became hidden
+                el.classList.remove('visible');
+                el.querySelectorAll('video').forEach(vid => vid.pause());
+            }
+        });
+    }
+
+    function nextStep() {
+        if (slides.length === 0) return;
+        const activeSlide = slides[currentSlideIndex];
+        const fragments = activeSlide.querySelectorAll('.fragment');
+        
+        let maxFragment = 0;
+        fragments.forEach(el => {
+            const steps = parseSteps(el);
+            if (steps.start > maxFragment) maxFragment = steps.start;
+        });
+
+        if (currentFragmentIndex < maxFragment) {
+            currentFragmentIndex++;
+            updateFragments();
+        } else {
+            showSlide(currentSlideIndex + 1);
+        }
+    }
+
+    function prevStep() {
+        if (currentFragmentIndex > 0) {
+            currentFragmentIndex--;
+            updateFragments();
+        } else {
+            showSlide(currentSlideIndex - 1);
+        }
+    }
+
+    function showSlide(index) {
+        if (index < 0 || index >= slides.length) return;
+
+        if (slides[currentSlideIndex]) {
+            slides[currentSlideIndex].querySelectorAll('video').forEach(vid => vid.pause());
+            slides[currentSlideIndex].classList.remove('active');
+        }
+
+        currentSlideIndex = index;
+        currentFragmentIndex = 0;
+        sessionStorage.setItem('currentSlideIndex', currentSlideIndex);
+        
+        const newSlide = slides[currentSlideIndex];
+        newSlide.classList.add('active');
+        
+        newSlide.querySelectorAll('.fragment').forEach(f => f.classList.remove('visible'));
+        
+        updateFragments();
+        
+        newSlide.querySelectorAll('video').forEach(vid => {
+            if (!vid.closest('.fragment')) {
+                vid.currentTime = 0;
+                vid.play().catch(e => console.warn("Autoplay blocked:", e));
+            }
+        });
+    }
+
+    function scaleSlides() {
+        if (slides.length === 0) return;
+        const activeSlide = slides[currentSlideIndex];
+        const slideWidthPx = activeSlide.offsetWidth;
+        const slideHeightPx = activeSlide.offsetHeight;
+        if (slideWidthPx === 0) return;
+
+        const scale = Math.min(
+            window.innerWidth / slideWidthPx, 
+            window.innerHeight / slideHeightPx
+        );
+        slides.forEach(slide => {
+            slide.style.transform = `scale(${scale})`;
+        });
+    }
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') {
+            nextStep();
+        } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
+            prevStep();
+        }
+    });
+
+    let mouseDownTime = 0;
+    let mouseDownX = 0;
+    let mouseDownY = 0;
+
+    document.addEventListener('mousedown', (e) => {
+        if (e.button === 0) {
+            mouseDownTime = Date.now();
+            mouseDownX = e.clientX;
+            mouseDownY = e.clientY;
+        }
+    });
+
+    document.addEventListener('click', (e) => {
+        if (e.button === 0 && e.target.tagName !== 'A' && e.target.tagName !== 'VIDEO') {
+            const clickDuration = Date.now() - mouseDownTime;
+            const dx = e.clientX - mouseDownX;
+            const dy = e.clientY - mouseDownY;
+            const moveDistance = Math.sqrt(dx * dx + dy * dy);
+            const hasSelection = window.getSelection().toString().length > 0;
+
+            if (clickDuration < 500 && moveDistance < 10 && !hasSelection) {
+                nextStep();
+            }
+        }
+    });
+
+    document.addEventListener('wheel', (e) => {
+        if (e.deltaY > 0) {
+            nextStep();
+        } else if (e.deltaY < 0) {
+            prevStep();
+        }
+    });
+
+    window.addEventListener('resize', scaleSlides);
+    if(slides.length > 0) {
+        if(currentSlideIndex >= slides.length) currentSlideIndex = slides.length - 1;
+        slides[currentSlideIndex].classList.add('active');
+    }
+    scaleSlides();
+</script>
+|endjs
+
+\injectcss
+body {
+    margin: 0;
+    padding: 0;
+    background-color: #111;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    overflow: hidden;
+}
+.slide {
+    width: [[WIDTH]]pt;
+    height: [[HEIGHT]]pt;
+    background-color: white;
+    position: relative;
+    display: none;
+    transform-origin: center center;
+    flex-shrink: 0;
+}
+.slide.active {
+    display: block;
+}
+.fragment {
+    opacity: 0;
+    transition: none;
+    pointer-events: none;
+}
+.fragment.visible {
+    opacity: 1;
+    pointer-events: auto;
+}
+|endcss
+
+\injecthtml
+<div class="slide" style="width:[[WIDTH]]pt; height:[[HEIGHT]]pt;">
+|endhtml

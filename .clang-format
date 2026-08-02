@@ -1,0 +1,26 @@
+---
+Language: Cpp
+BasedOnStyle: WebKit
+AccessModifierOffset: 0
+LambdaBodyIndentation: Signature
+AlignAfterOpenBracket: BlockIndent
+AlignOperands: Align
+AllowShortIfStatementsOnASingleLine: Never
+AllowShortLoopsOnASingleLine: false
+BinPackArguments: true
+BinPackParameters: true
+BreakBeforeBraces: Whitesmiths
+BreakConstructorInitializers: BeforeColon
+Cpp11BracedListStyle: true
+FixNamespaceComments: true
+IndentWidth: 4
+PointerAlignment: Left
+SpaceAfterTemplateKeyword: false
+SpaceBeforeParens: ControlStatements
+Standard: Latest
+TabWidth: 4
+UseTab: Never
+IndentCaseLabels: true
+IndentAccessModifiers: true
+AllowShortCaseLabelsOnASingleLine: true
+ColumnLimit: 140

@@ -1,0 +1,25 @@
+\pdfximage {testpng.png}
+\edef\pngid{\the\pdflastximage}
+
+\pdfximage {testjpeg.jpeg}
+\edef\jpegid{\the\pdflastximage}
+
+This is a paragraph of text. Below this paragraph, we will embed a PNG image.
+
+\pdfrefximage \pngid width 200bp height 160bp
+
+And here is some more text. Below this, we will embed a JPEG image.
+
+\pdfrefximage \jpegid width 100bp height 150bp
+
+And here is some final text. We repeat the PNG image now, but with different dimensions:
+
+\pdfrefximage \pngid width 200bp height 100bp
+
+And the JPEG image again:
+
+\pdfrefximage \jpegid width 20bp height 10bp
+
+Wow.
+
+\bye

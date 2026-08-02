@@ -1,0 +1,44 @@
+\def\oddtext{People have \hbox{$\alpha\beta\delta\gamma\epsilon221$} commented that there are ridiculous conferences calculating expressions like \hbox{$1+ 2+ 6 \alpha\beta+2x ( y+z ) dx$}.}
+
+This is a quick plain-TeX highlighting just a small number of errors and warnings.
+The work I've done so far on the ``expressive'' diagnostics is just scratching the surface; there are a lot of errors that can crop up in TeX. 
+Some can be helped with almost no changes to the underlying engine; some would require major changes (like trying to track the provenance of tokens).
+Doing those changes in either a performance-neutral (or, where not possible, opt-in) way is on the roadmap.
+
+Lot's of errors are typos:
+$\vce{a} \cdoot \ahat{n} = 12$
+
+Giving better errors for these can be done with the information the TeX82 engine already has.
+What about times when we want to report the typeset lines rather than the source... after all, the lines might have come from anywhere
+
+\hsize=2.33in %force our lines to be quite small!
+
+Several ridiculous conferences routinely characterize frivolous phenomenology.
+
+\hsize=2.5in
+
+\oddtext\par
+
+\hsize=6in
+
+Another kind of error are those pesky ``oh, you forgot to close your math environment'' variety:
+
+I have computed this expression: $10 = 1+2+3+4
+
+We forgot to close the math environment there... whoops!
+
+Having diagnostics pointing not only to the insertion point but also where the mode was opened requires a little bit of extra information to be stored (in the list\_state\_record, if you're interested), but not much.
+Some examples:
+$ 10 = 1 + 2
+   +3+4
+
+Or what if we start and end in different files?
+$ 10 = 1 + \input error_math_stuff
+
+\openmath{x^2 + y^2} = r^2 
+
+This conveniently highlights the interaction between the semantic nest, the scanner, etc.
+With more work we could decide to highlight the macro, or move where that down-pointing ``caret'' is located, etc.
+
+
+\bye
