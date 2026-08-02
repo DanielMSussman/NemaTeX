@@ -1,0 +1,13 @@
+# build
+build/
+!build/.keep
+Debug/
+Release/
+
+# tools
+compile_commands.json
+.cache/
+.clangd/
+
+#editors
+*.swp
