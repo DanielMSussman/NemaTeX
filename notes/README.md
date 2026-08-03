@@ -115,14 +115,10 @@ With the state encapsulated, this milestone tackles the internal logic and struc
         - [ ] remove noads from the node organization and the texmemory class altogether
     - [ ] font manager and font interface need to be refactored. Font stores, TeX-related font interfaces, and then a simpler manager. The kind of thing we can pass around with no reference to the engine (i.e., what the output routines want to have)
     - [ ] fold away / reorganize interaction manager and display printers
-    
-- [ ] `src/common` sudirectory. Are we happy with the things that are in this space?
-    - [ ] constant
-    - [ ] enums
-    - [ ] helpers
-    - [ ] structs
-    - [ ] types
 
+- [x]  make an iterator for the texMemory, replacing a lot of the `while (p!=nullword)` stuff
+    - [x] use throughout where appropriate
+    
 ## Milestone 8: Architecture, cleaning, improvements, part 3 (deeper font stuff, etc)
 
 - [ ] primitives for selecting otf font features (or disabling tex ligatures)
@@ -135,6 +131,12 @@ With the state encapsulated, this milestone tackles the internal logic and struc
 
 - [ ] font selection scheme for text and math. See `notes/fonts.md` (and related to the above)
 
+- [ ] `src/common` sudirectory. Are we happy with the things that are in this space?
+    - [ ] constant
+    - [ ] enums
+    - [ ] helpers
+    - [ ] structs
+    - [ ] types
 
 ## Milestone 9: macro storage and dynamic memory
 
