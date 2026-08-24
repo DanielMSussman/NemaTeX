@@ -1,5 +1,6 @@
 # For now, we're putting important output in a dedicated directory, and redirecting to an empty file in place of dev/null
-file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/test_output)
+set(NEMATEX_TEST_OUTPUT_DIR "${CMAKE_BINARY_DIR}/ctest_output")
+file(MAKE_DIRECTORY ${NEMATEX_TEST_OUTPUT_DIR})
 file(TOUCH ${CMAKE_BINARY_DIR}/empty_input.txt)
 
 # Many of our tests are of the flavor "compare a generated file with a gold standard,
@@ -8,7 +9,7 @@ function(compare_output_test TEST_NAME GENERATED_FILE GOLD_FILE SCRIPT_FILE REQU
     add_test(
         NAME ${TEST_NAME}
         COMMAND ${CMAKE_COMMAND}
-            -DGENERATED_FILE=${CMAKE_BINARY_DIR}/test_output/${GENERATED_FILE}
+        -DGENERATED_FILE=${NEMATEX_TEST_OUTPUT_DIR}/${GENERATED_FILE}
             -DGOLD_FILE=${CMAKE_CURRENT_SOURCE_DIR}/${GOLD_FILE}
             -P ${CMAKE_CURRENT_SOURCE_DIR}/${SCRIPT_FILE}
     )
@@ -71,3 +72,4 @@ add_subdirectory(triptest)
 add_subdirectory(etextrip)
 add_subdirectory(pageir)
 add_subdirectory(tagging)
+add_subdirectory(l3primitives)

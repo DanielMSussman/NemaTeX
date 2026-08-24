@@ -1,5 +1,7 @@
 # Summary
 
+Unless otherwise noted, the code in this repository falls under the license listed in the `LICENSE.md` file in the root of the repo. Exceptions include items in the `extern` directory, and everything below:
+
 ## Knuth, TeX, and LaTeX
 
 For an overall description of the status of how this project relates to `tex.web`, and for information about `plain.tex`, `hyphen.tex`, and multiple `.tfm` files, see `KnuthLicense.md`.
@@ -8,7 +10,8 @@ The `/assets/tex/unicode-math-table.tex` is from the unicode math project, redis
 
 As noted in the project root readme, there are also external libraries used -- described in the readme with license text in the associated `extern/` directory.
 
-The `assets/samples/` directory may contain open source files as sample compilable targets. A separate `README.md` is located in that directory with license information.
+The `assets/samples/` directory may contain open source files as sample compilable targets. A separate `LICENSE.md` is located in that directory with license information.
+
 
 ## fonts
 
@@ -34,3 +37,7 @@ Project lead: Konstantin Bulenkov
 Copyright 2014 The Mozilla Foundation and Telefonica S.A. [github](https://github.com/bBoxType/FiraSans), with Reserved Font Name "Fira". Fira™ is a trademark of The Mozilla Corporation.
 Type designers: Erik Spiekermann and Ralph du Carrois (Carrois Type Design / bBox Type)
 Project lead: Mozilla Foundation
+
+## Thread pool
+
+The code for the `thread_pool.h` file is a modernization of the classic C++11 implementation [from Progschj](https://github.com/progschj/threadpool), which is under the zlib license (full license in that file).

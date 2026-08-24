@@ -8,9 +8,18 @@ Think of this as a Chaos Muppet approach to versioning in the 0.X phase, when th
 
 I'm sorry if my obvious disregard for version parsers is upsetting. We should come up with a name for this scheme... strings of digits get eaten, but it's not really Ouroboros. Perhaps the Lernaean Hydra Scheme? Or Zeno's release candidate? I should probably add a milestone for "think of a good name."
 
-# Current string: 0.7.8.9.10.11.13.14.15.16.[8]
+# Current string: 0.7.8.9.10.11.13.14.15.16.18[9]
 
-# 0.7.8.9.10.11.13.14.15.16.[8]
+* finished implementing e-tex extensions -- etex trip test passes
+
+#  0.7.8.9.10.11.13.14.15.16.18[9]
+
+* Major reorganization of the memory array. 
+    LuaTeX split the tokens off from the variable-sized nodes; we've gone a 
+    step further and made a different pool of memory words for each different size of node.
+    Greatly simplified logic for getting and freeing nodes
+
+# 0.7.8.9.10.11.13.14.15.16.17[8]
 
 * first set of architectural reorganizations
 

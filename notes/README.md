@@ -107,13 +107,21 @@ With the state encapsulated, this milestone tackles the internal logic and struc
     - [x] update timer to align with pdftex (for l3kernel)
 
 - [ ] continued state decoupling and class organization.
-    - [ ] compositor/typesetter/scanner/engine entanglements... pretty fundamental, but think about it 
-    - [x] LineBreaker -- finish extracting a KnuthPlass core that is independent of the engine state
+    - [ ] compositor/galley/scanner/engine entanglements... pretty fundamental, but think about it 
+    - [x] tokenReader -- ExpressionParser, MacroExpander, ValueScanner, ConditionalManager
+    - [ ] pagebuilder: split off a PageRenderer, InsertionManager, and a stateless vsplitter?
+    - [ ] font manager and font interface need to be refactored. Font stores, TeX-related font interfaces, and then a simpler manager. The kind of thing we can pass around with no reference to the engine (i.e., what the output routines want to have)
+    - [ ] executor: split off the hyphenation stuff, an ExtensionProcessor, an AssignmentProcessor, and something for group-closers / right-braces
+    - [x] LineBreaker 
+        - [x] extract a KnuthPlass core that is independent of the engine state
+        - [ ] other composition candidates: LineAssembler (for post_line_break), HyphenationScanner for try_hyphenation_sequence, and a LineBreakTracer for the diagnostic dispatch_events stuff
+    - [ ] alignment: PreambleScanner (initialize_alignment and get_preamble_token), AlignmentRenderer (finalize_alignment), and possibly a TableTagManager. 
+        - [ ] just noticed that resume_after_display is here, instead of near end_display_math?
     - [ ] math list -- extract out the math AST noads from the main Memory
         - [ ] math AST: small variant with side tables a la the pageIR
             - [ ] freeing and error recovery -- walk once to tell the memory to clean nodes up if needed, then `.clear()`
         - [ ] remove noads from the node organization and the texmemory class altogether
-    - [ ] font manager and font interface need to be refactored. Font stores, TeX-related font interfaces, and then a simpler manager. The kind of thing we can pass around with no reference to the engine (i.e., what the output routines want to have)
+        - [ ] split candidates: a MathRenderer (AST->hlist), MathModeManager, and something to do with all of the MathParameters (depends on FontManager reorg)
     - [ ] fold away / reorganize interaction manager and display printers
 
 - [x]  make an iterator for the texMemory, replacing a lot of the `while (p!=nullword)` stuff
@@ -123,7 +131,7 @@ With the state encapsulated, this milestone tackles the internal logic and struc
 
 - [ ] primitives for selecting otf font features (or disabling tex ligatures)
 
-- [ ] OTF Math -- check the many lingering issues (`ua2gentle` math chapter shows a few inconsistencies. Surds.)
+- [ ] OTF Math -- check the many lingering issues (`ua2gentle` math chapter shows a few inconsistencies. Surds.). 
 
 - [ ] comment in OTF reconstituter header. 
     - [ ] OTF reconstituter improvements
@@ -132,11 +140,10 @@ With the state encapsulated, this milestone tackles the internal logic and struc
 - [ ] font selection scheme for text and math. See `notes/fonts.md` (and related to the above)
 
 - [ ] `src/common` sudirectory. Are we happy with the things that are in this space?
-    - [ ] constant
+    - [ ] constants
     - [ ] enums
-    - [ ] helpers
+    - [ ] primitive types
     - [ ] structs
-    - [ ] types
 
 ## Milestone 9: macro storage and dynamic memory
 
@@ -145,13 +152,13 @@ With the state encapsulated, this milestone tackles the internal logic and struc
 
 ## Milestone 10: e-TeX and LaTeX
 
-- [ ] e-tex extensions (`notes/etex.md`)
+- [x] e-tex extensions
 - [ ] things required for the l3 kernel (`notes/l3kernel.md`)
     - [ ] think more about expl3
 - [ ] audit engine constants
     - [ ] reimplement hash table (current fingerprinting limits cs capacity to 16387)
     - [x] Put the string pool on the heap as a vector
-    - [ ] fix the limited `max_halfword` kludge
+    - [x] fix the limited `max_halfword` kludge
 
 ## Milestone 11: error messages
 
@@ -206,6 +213,15 @@ Goal: introduce engine-level primitives to allow safe, concurrent macro expansio
 
 Currently, the `input_character_map` just enforces 7 (7!)-bit input (but our nodes are arranged to have room for 21 bits). We should build out an actual unicode scanner that can hand the engine codepoints, and then start confronting all of the times that the number `256` is used in the codebase
 
+# Milestone 17: dynamic and separated memory
+
+- [x] strong typing of the pointer -> NodePtr (or similar), which will use 32 bits to hold both an index and a tag.
+- [x] Split the monolithic vector of nodes into a small number of vectors, one for each different size of node / noad. Use the tagged pointer to index into the correct vector
+- [x] greatly simplify the get_node mechanism, etc -- just a bunch of simple free lists
+
+# Milestone 18: a standard library
+
+Perhaps in keeping with the "where is the boundary between the engine and macro layers", we should think hard about implementing a small number of extremely standard packages at the engine level.
 
 # Milestone X:  unsorted ideas (i.e., the staging ground for future milestones)
 
@@ -216,8 +232,6 @@ Currently, the `input_character_map` just enforces 7 (7!)-bit input (but our nod
         - [ ] specials: probably restrict to special and scopedspecial
 
 - [ ] IR of enough state and memory before linebreaking?
-
-- [ ] Dynamic / resizing memory vector
 
 - [ ] citations (eplain? something else?)
 

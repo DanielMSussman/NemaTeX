@@ -7,6 +7,6 @@ normalize_data_model()
 normalize_preloaded_format_date()
 normalize_glue_set()
 
-normalize_regex("[ ]*\\((\\./)?e?trip\\.tex( ##)?" "(trip.tex")
+normalize_regex("[ ]*\\((\\./)?e?trip\\.tex" "(trip.tex")
 
 compare_and_report()

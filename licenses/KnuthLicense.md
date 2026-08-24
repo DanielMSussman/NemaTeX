@@ -18,7 +18,7 @@ Knuth requested a specific criteria for implementations of TeX:
 >
 >TeX is in the public domain, and its algorithms are published; I've done this since I do not want to discourage its use by placing proprietary restrictions on the software. However, I don't want faulty imitations to masquerade as TeX processors, since users want TeX to produce identical results on different machines. Hence I am planning to do whatever I can to suppress any systems that call themselves TeX without meeting conditions (1) and (2). I have copyrighted the programs so that I have some chance to forbid unauthorized copies; I explicitly authorize copying of correct TeX implementations, and not of incorrect ones!
 
-I am, indeed, happy with the way my program works at my installation. Furthermore, this repo includes running the TRIP test as part of its automated test suite (see the `CMakeLists.txt` and `assets/triptest/` for more details). This ensures the core engine logic remains faithful to the original specifications, even as I change the internal architecture and add functionality.
+I am, indeed, happy with the way my program works at my installation. Furthermore, this repo includes running the TRIP test as part of its automated test suite (see the `CMakeLists.txt` files and `test/triptest/` for more details). This ensures the core engine logic remains faithful to the original specifications, even as I change the internal architecture and add functionality.
 
 # other files
 

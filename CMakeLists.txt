@@ -22,7 +22,7 @@ target_compile_options(miniz_lib PRIVATE
     -fdata-sections
 )
 
-if(NOT CMAKE_BUILD_TYPE MATCHES Debug)
+if(NOT CMAKE_BUILD_TYPE MATCHES "^(Debug|Coverage)$")
     add_compile_options(
         -O3
         -march=native
@@ -31,12 +31,6 @@ if(NOT CMAKE_BUILD_TYPE MATCHES Debug)
         -fdata-sections
     )
 endif()
-add_compile_options(
-    -Wall
-    -Wextra
-    -Wshadow 
-    -Wno-deprecated-enum-enum-conversion # maybe someday we get rid of this...
-)
 
 if(CMAKE_BUILD_TYPE MATCHES Debug)
     add_compile_options(
@@ -47,6 +41,24 @@ if(CMAKE_BUILD_TYPE MATCHES Debug)
     add_link_options(-fsanitize=address)
 endif()
 
+if(CMAKE_BUILD_TYPE MATCHES Coverage)
+    add_compile_options(
+        -g
+        -O0
+        --coverage
+    )
+    add_link_options(--coverage)
+endif()
+
+add_compile_options(
+    -Wall
+    -Wextra
+    -Wshadow 
+    -Wpedantic
+    # -Wconversion # turn this on for a laugh sometime
+    -Wnon-virtual-dtor
+    -Woverloaded-virtual
+)
 include_directories(
     ${CMAKE_SOURCE_DIR}/extern
     ${HarfBuzz_INCLUDE_DIRS}
@@ -98,3 +110,29 @@ add_custom_target(formats ALL
 
 enable_testing()
 add_subdirectory(test)
+
+if(CMAKE_BUILD_TYPE MATCHES Coverage)
+    find_program(GCOVR_PATH gcovr)
+
+    if(GCOVR_PATH)
+        add_custom_target(coverage
+            COMMAND ${CMAKE_CTEST_COMMAND} --output-on-failure
+
+            COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_BINARY_DIR}/coverage_report
+
+            COMMAND ${GCOVR_PATH} 
+                --html-nested ${CMAKE_BINARY_DIR}/coverage_report/index.html
+                --root ${CMAKE_SOURCE_DIR}
+                --object-directory ${CMAKE_BINARY_DIR}
+                --exclude "${CMAKE_SOURCE_DIR}/extern/.*"
+                --exclude "${CMAKE_SOURCE_DIR}/test/.*"
+                --print-summary
+            
+            WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+            DEPENDS ${PROJECT_NAME} formats
+            COMMENT "Generating HTML coverage report in ${CMAKE_BINARY_DIR}/coverage_report/index.html"
+        )
+    else()
+        message(WARNING "gcovr not found! The 'coverage' target will not be available.")
+    endif()
+endif()
