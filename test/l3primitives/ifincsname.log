@@ -1,0 +1,14 @@
+START
+IFINCSNAME TEST 1: false outside csname
+PASS: ifincsname false outside csname
+IFINCSNAME TEST 2: true inside csname
+PASS: ifincsname true inside csname
+IFINCSNAME TEST 3: nested csname
+PASS: ifincsname true in nested csname
+IFINCSNAME TEST 4: false after endcsname
+PASS: ifincsname false after endcsname
+IFINCSNAME TEST 5: true inside ifcsname
+PASS: ifincsname true inside ifcsname
+IFINCSNAME TEST 6: false after ifcsname
+PASS: ifincsname false after ifcsname
+END

@@ -1,0 +1,102 @@
+START
+EXPANDED TEST 1
+> \expanded=\expanded.
+l.14 \show\expanded
+                   
+
+EXPANDED TEST 2
+> \ccc=macro:
+->xx,x.
+l.21 \show\ccc
+              
+
+EXPANDED TEST 3: the
+xx,123
+EXPANDED TEST 4: macro param
+> \ddd=macro:
+#1->#1.
+l.30 \show\ddd
+              
+
+EXPANDED TEST 5: torture
+> ##,\aaa ,\aaa .
+l.35 ...\aaa,\unexpanded{\aaa}}}
+                                
+
+> ##,##.
+l.36 ...anded{#,\unexpanded{#}}}
+                                
+
+> \aaa .
+l.37 ...andafter{\noexpand\aaa}}
+                                
+
+> x.
+l.38 ...fter{\unexpanded{\aaa}}}
+                                
+
+> xx\aaa .
+<inserted text> {xx\aaa }
+                         
+l.39 ...noexpand\noexpand\aaa}}}
+                                
+
+> \aaa .
+<inserted text> {\aaa }
+                       
+l.41 ...s\expanded{{\the\toks0}}
+                                
+
+> \egroup=end-group character }.
+<inserted text> \show \egroup 
+                              
+l.42 ...nded\bgroup\show\egroup}
+                                
+
+> \foo=macro:
+->##.
+l.44 \show\foo
+              
+
+EXPANDED TEST 6: protected macros
+> \result=macro:
+->\safe .
+l.52 \show\result
+                 
+
+> \check=macro:
+->\safe .
+l.55 \show\check
+                
+
+EXPANDED TEST 7: nested expanded
+> \outer=macro:
+->inner-result.
+l.61 \show\outer
+                
+
+EXPANDED TEST 8: csname inside expanded
+> \r=macro:
+->unspool.
+l.68 \show\r
+            
+
+> \s=macro:
+->\fool .
+l.70 \show\s
+            
+
+> \t=macro:
+->\fool .
+l.72 \show\t
+            
+
+EXPANDED TEST 9: conditional boundaries
+PASS: conditional survived expanded
+EXPANDED TEST 10: active characters
+> \act=macro:
+->ACTIVE.
+l.87 \show\act
+              
+
+END

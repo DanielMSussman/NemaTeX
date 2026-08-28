@@ -1,0 +1,90 @@
+% Test file for \expanded primitive
+%% Public domain.
+% Based on expanded.tex from TeX Live (David Carlisle, Bruno Le Floch, 2018)
+% Extended with a few additional cases specific (Daniel Sussman, 2026)... differences in the fot snapshot are because we and pdftex have different default half_error_line values
+\nonstopmode
+\catcode`\{=1 \catcode`\}=2 \catcode`\#=6
+\def\typ#1{\immediate\write-1 {#1}}
+\def\space{ }
+\let\bgroup{ \let\egroup}
+
+\typ{START}
+\typ{EXPANDED TEST 1}
+% Check the primitive exists
+\show\expanded
+
+\typ{EXPANDED TEST 2}
+% Simple expansion test
+\def\aaa{x}
+\def\bbb{\aaa\aaa}
+\expandafter\def\expandafter\ccc\expandafter{\expanded{\bbb,\aaa}}
+\show\ccc
+
+\typ{EXPANDED TEST 3: the}
+% Expanding \the
+\typ{\expanded{\bbb,\the\numexpr100+20+3\relax}}
+
+\typ{EXPANDED TEST 4: macro param}
+% Constructed #1 is still #1
+\expandafter\def\expandafter\ddd\expandafter#\expanded{1{#\number--1}}
+\show\ddd
+
+\typ{EXPANDED TEST 5: torture}
+% Torture test from Bruno Le Floch testing various tricky interactions
+\expanded\relax\space\ifincsname \BOOM\fi{\ifincsname \BOOM\fi}
+\showtokens\expandafter{\expanded{#,\noexpand\aaa,\unexpanded{\aaa}}}
+\showtokens\expandafter{\expanded{#,\unexpanded{#}}}
+\showtokens\expandafter{\expanded\expandafter{\noexpand\aaa}}
+\showtokens\expandafter{\expanded\expandafter{\unexpanded{\aaa}}}
+\showtokens\expanded{{\expanded{\aaa\noexpand\aaa\noexpand\noexpand\noexpand\aaa}}}
+\toks0{\aaa}
+\showtokens\expanded{{\the\toks0}}
+\expanded\bgroup\show\egroup}
+\edef\foo{\expanded{##}}
+\show\foo
+
+% tests beyond those at https://github.com/TeX-Live/texlive-source/blob/trunk/texk/web2c/pdftexdir/tests/expanded.tex begin here
+
+\typ{EXPANDED TEST 6: protected macros}
+% \protected macros must not expand inside \expanded
+\protected\def\safe{DANGER}
+\edef\result{\expanded{\safe}}
+\show\result
+% Verify \safe itself still works normally outside \expanded
+\def\check{\safe}
+\show\check
+
+\typ{EXPANDED TEST 7: nested expanded}
+% \expanded inside \expanded
+\def\inner{inner-result}
+\edef\outer{\expanded{\expanded{\inner}}}
+\show\outer
+
+\typ{EXPANDED TEST 8: csname inside expanded}
+% \csname...\endcsname inside \expanded, with and without \noexpand and \unexpanded
+\def\foo{fool}
+\def\fool{unspool}
+\expandafter\def\expandafter\r\expandafter{\expanded{\csname\foo\endcsname}}
+\show\r
+\expandafter\def\expandafter\s\expandafter{\expanded{\expandafter\noexpand\csname\foo\endcsname}}
+\show\s
+\expandafter\def\expandafter\t\expandafter{\expanded{\expandafter\unexpanded\expandafter{\csname\foo\endcsname}}}
+\show\t
+
+\typ{EXPANDED TEST 9: conditional boundaries}
+% The \iftrue is evaluated during \expanded, leaving the engine 
+% in a 'true' conditional state that applies to the outer tokens.
+\expanded{\iftrue} 
+  \typ{PASS: conditional survived expanded}
+\else 
+  \typ{FAIL} 
+\fi
+
+\typ{EXPANDED TEST 10: active characters}
+\catcode`\~=13
+\def~{ACTIVE}
+\edef\act{\expanded{~}}
+\show\act
+
+\typ{END}
+\end

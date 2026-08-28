@@ -1,0 +1,99 @@
+% Test file for file operation primitives:
+%   \pdffilesize      -- file size as a string (empty if not found)
+%   \pdffilemoddate   -- file modification date in PDF date format
+%   \pdffiledump      -- hex dump of file bytes
+%   \pdfmdfivesum     -- MD5 hash of a string or file
+%   \pdfcreationdate  -- current creation date in PDF date format
+%% Public domain.
+%% Daniel M Sussman (2026)
+
+\catcode`\{=1 \catcode`\}=2 \catcode`\#=6
+\def\typ#1{\immediate\write-1 {#1}}
+\def\getprefix#1#2#3\relax{#1#2}
+
+\typ{START}
+
+\typ{MDFIVESUM TEST 1: empty string}
+% MD5 of empty string is d41d8cd98f00b204e9800998ecf8427e
+\typ{\pdfmdfivesum {}}
+
+\typ{MDFIVESUM TEST 2: known string}
+% MD5 of "abc" is 900150983cd24fb0d6963f7d28e17f72
+\typ{\pdfmdfivesum {abc}}
+
+\typ{MDFIVESUM TEST 3: longer string}
+% MD5 of "The quick brown fox jumps over the lazy dog"
+% is 9e107d9d372bb6826bd81d3542a419d6
+\typ{\pdfmdfivesum {The quick brown fox jumps over the lazy dog}}
+
+\typ{MDFIVESUM TEST 4: macro expansion in string mode}
+\def\foo{The quick }
+\def\bar{brown fox }
+\def\baz{jumps over the lazy dog}
+\typ{\pdfmdfivesum {\foo\bar\baz}}
+
+\typ{MDFIVESUM TEST 5: file mode missing file}
+\ifnum\pdfstrcmp{\pdfmdfivesum file {this-file-does-not-exist.txt}}{}=0
+  \typ{PASS: mdfivesum empty for missing file}
+\else
+  \typ{FAIL: mdfivesum not empty for missing file}
+\fi
+
+\typ{MDFIVESUM TEST 6: known file}
+\typ{\pdfmdfivesum file {fileops_known_file.tex}}
+
+\typ{FILESIZE TEST 1: nonexistent file}
+\ifnum\pdfstrcmp{\pdffilesize{this-file-does-not-exist.txt}}{}=0
+  \typ{PASS: filesize empty for missing file}
+\else
+  \typ{FAIL: filesize not empty for missing file}
+\fi
+
+\typ{FILESIZE TEST 2: known file}
+\typ{\pdffilesize{fileops_known_file.tex}}
+\ifnum\pdffilesize{fileops_known_file.tex}=13
+  \typ{PASS: filesize matches exact byte count}
+\else
+  \typ{FAIL: filesize mismatch}
+\fi
+
+\typ{FILEMODDATE TEST 1: nonexistent file}
+\ifnum\pdfstrcmp{\pdffilemoddate{this-file-does-not-exist.txt}}{}=0
+  \typ{PASS: moddate empty for missing file}
+\else
+  \typ{FAIL: moddate not empty for missing file}
+\fi
+
+\typ{FILEMODDATE TEST 2: known file}
+\edef\moddt{\pdffilemoddate{fileops.tex}}
+\ifnum\pdfstrcmp{\expandafter\getprefix\moddt\relax}{D:}=0
+  \typ{PASS: moddate starts with D:}
+\else
+  \typ{FAIL: moddate does not start with D:}
+\fi
+
+\typ{CREATIONDATE TEST 1: format prefix}
+\edef\dt{\pdfcreationdate}
+\ifnum\pdfstrcmp{\expandafter\getprefix\dt\relax}{D:}=0
+  \typ{PASS: creationdate starts with D:}
+\else
+  \typ{FAIL: creationdate does not start with D:}
+\fi
+
+\typ{FILEDUMP TEST 1: known file slice}
+% Dump first 5 bytes ("Hello" -> 48656C6C6F)
+\typ{\pdffiledump offset 0 length 5 {fileops_known_file.tex}}
+
+\typ{FILEDUMP TEST 2: known file full}
+% Dump entire 13 bytes ("Hello World!\n" -> 48656C6C6F20576F726C64210A)
+\typ{\pdffiledump {fileops_known_file.tex}}
+
+\typ{FILEDUMP TEST 3: nonexistent file}
+\ifnum\pdfstrcmp{\pdffiledump {this-file-does-not-exist.txt}}{}=0
+  \typ{PASS: filedump empty for missing file}
+\else
+  \typ{FAIL: filedump not empty for missing file}
+\fi
+
+\typ{END}
+\end

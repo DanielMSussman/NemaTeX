@@ -12,7 +12,6 @@ As noted in the project root readme, there are also external libraries used -- d
 
 The `assets/samples/` directory may contain open source files as sample compilable targets. A separate `LICENSE.md` is located in that directory with license information.
 
-
 ## fonts
 
 ### pfb files
@@ -38,6 +37,3 @@ Copyright 2014 The Mozilla Foundation and Telefonica S.A. [github](https://githu
 Type designers: Erik Spiekermann and Ralph du Carrois (Carrois Type Design / bBox Type)
 Project lead: Mozilla Foundation
 
-## Thread pool
-
-The code for the `thread_pool.h` file is a modernization of the classic C++11 implementation [from Progschj](https://github.com/progschj/threadpool), which is under the zlib license (full license in that file).

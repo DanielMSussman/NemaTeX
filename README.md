@@ -28,11 +28,6 @@ ctest
 
 You can read about the project's history (hope you enjoy!) in [Changelog.md](Changelog.md). My rough plans for future development (and past milestones already finished) can be found in the `notes/` directory.
 
-## Third party components
-
-This contains components from other open-source projects. Overall information, including where to find the relevant license files, can be found in the `licenses/` directory. The `extern/` directory additionally includes license information for [miniz](https://github.com/richgel999/miniz)  (MIT license) for zlib deflation, [argh](https://github.com/adishavit/argh) (BSD-3) for command-line parsing, [stb_image](https://github.com/nothings/stb) (MIT or Unlicense) for asset decoding, and [woff2](https://github.com/google/woff2) (MIT) for font compression.
-
-
 ## Ramble
 
 It's odd to say, but LaTeX is one of those things that makes my life better. I don't have the most sophisticated taste, but when a colleague hands me notes that not only contain beautiful ideas, but are also beautifully typeset... fantastic.

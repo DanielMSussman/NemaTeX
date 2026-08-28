@@ -1,0 +1,53 @@
+% Test file for RNG primitives (assumes the pdftex prng implementation):
+%   \pdfsetrandomseed  -- set the random seed
+%   \pdfrandomseed     -- read current seed
+%   \pdfuniformdeviate -- uniform random integer in [0, N)
+%   \pdfnormaldeviate  -- Gaussian-distributed random integer
+%% Public domain.
+%% Daniel M Sussman (2026)
+
+\catcode`\{=1 \catcode`\}=2 \catcode`\#=6
+\def\typ#1{\immediate\write-1 {#1}}
+
+\typ{START}
+
+\typ{RNG TEST 1: setrandomseed and randomseed}
+% Setting a seed and reading it back
+\pdfsetrandomseed 42
+\typ{\the\pdfrandomseed}
+
+\typ{RNG TEST 2: uniform deviate with seed}
+% With a fixed seed, the sequence must be deterministic
+\pdfsetrandomseed 12345
+\typ{\pdfuniformdeviate 100}
+\typ{\pdfuniformdeviate 100}
+\typ{\pdfuniformdeviate 100}
+
+\typ{RNG TEST 3: uniform deviate range}
+% \pdfuniformdeviate N returns value in [0, N)
+% With N=1, must always be 0
+\pdfsetrandomseed 99999
+\typ{\pdfuniformdeviate 1}
+\typ{\pdfuniformdeviate 1}
+
+\typ{RNG TEST 4: normal deviate with seed}
+% With a fixed seed, the sequence must be deterministic
+\pdfsetrandomseed 12345
+\typ{\pdfnormaldeviate}
+\typ{\pdfnormaldeviate}
+\typ{\pdfnormaldeviate}
+
+\typ{RNG TEST 5: reseed changes sequence}
+% Different seeds give different sequences
+\pdfsetrandomseed 1
+\edef\seqA{\pdfuniformdeviate 1000000}
+\pdfsetrandomseed 2
+\edef\seqB{\pdfuniformdeviate 1000000}
+\ifnum\seqA=\seqB
+  \typ{FAIL: different seeds gave same value}
+\else
+  \typ{PASS: different seeds gave different values}
+\fi
+
+\typ{END}
+\end

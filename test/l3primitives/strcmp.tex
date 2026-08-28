@@ -1,0 +1,64 @@
+% Test file for \pdfstrcmp primitive
+%% Public domain.
+%% Daniel M Sussman (2026)
+
+\catcode`\{=1 \catcode`\}=2 \catcode`\#=6
+\def\typ#1{\immediate\write-1 {#1}}
+
+\typ{START}
+
+\typ{STRCMP TEST 1: equal strings}
+\typ{\pdfstrcmp{abc}{abc}}
+
+\typ{STRCMP TEST 2: less than}
+\typ{\pdfstrcmp{abc}{abd}}
+
+\typ{STRCMP TEST 3: greater than}
+\typ{\pdfstrcmp{abd}{abc}}
+
+\typ{STRCMP TEST 4: empty strings equal}
+\typ{\pdfstrcmp{}{}}
+
+\typ{STRCMP TEST 5: empty less than non-empty}
+\typ{\pdfstrcmp{}{a}}
+
+\typ{STRCMP TEST 6: non-empty greater than empty}
+\typ{\pdfstrcmp{a}{}}
+
+\typ{STRCMP TEST 7: numeric strings}
+\typ{\pdfstrcmp{10}{9}}
+
+\typ{STRCMP TEST 8: prefix comparison}
+\typ{\pdfstrcmp{abc}{abcd}}
+
+\typ{STRCMP TEST 9: case sensitivity}
+\typ{\pdfstrcmp{A}{a}}
+
+\typ{STRCMP TEST 10: in conditional}
+\ifnum\pdfstrcmp{hello}{hello}=0
+  \typ{PASS: equal gives 0}
+\else
+  \typ{FAIL}
+\fi
+
+\typ{STRCMP TEST 11: macro expansion before comparison}
+\def\foo{apple}
+\def\bar{ap}
+\def\baz{ple}
+\def\qux{\bar\baz}
+\ifnum\pdfstrcmp{\foo}{\qux}=0
+  \typ{PASS: fully expanded strings match}
+\else
+  \typ{FAIL}
+\fi
+
+\typ{STRCMP TEST 12: unexpandable token stringification}
+\def\space{ }
+\ifnum\pdfstrcmp{\relax}{\string\relax\space}=0
+  \typ{PASS: unexpandable relax matches stringified relax}
+\else
+  \typ{FAIL}
+\fi
+
+\typ{END}
+\end

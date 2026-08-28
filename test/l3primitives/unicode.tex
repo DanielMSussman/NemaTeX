@@ -1,0 +1,93 @@
+% Test file for Umathcode, Uchar, and Ucharcat
+%% Public domain.
+%% Daniel M Sussman (2026)
+
+\catcode`\{=1 \catcode`\}=2 \catcode`\#=6
+\def\typ#1{\immediate\write-1 {#1}}
+
+\typ{START}
+
+
+\typ{TEST 1: Umathcode}
+\Umathcode 65 = 0 1 65
+\typ{\the\mathcode 65}% we say (0 << 24) + (1 << 21) + 65 = 2097217; xetex would say (0 * 4096) + (1 * 256) + 65 = 321
+
+\typ{TEST 2: Uchar}
+\if A\Uchar 65
+  \typ{PASS: Uchar 65 is A}
+\else
+  \typ{FAIL: Uchar 65 mismatch}
+\fi
+\ifnum\pdfstrcmp{\Uchar 32}{ }=0
+  \typ{PASS: Uchar 32 is space}
+\else
+  \typ{FAIL: Uchar 32 mismatch}
+\fi
+\ifnum\pdfstrcmp{\Uchar 65\Uchar 66\Uchar 67}{ABC}=0
+  \typ{PASS: Uchar ABC string matches}
+\else
+  \typ{FAIL: Uchar ABC string mismatch}
+\fi
+
+\typ{TEST 3: valid Ucharcat}
+\ifcat\Ucharcat 65 11 a
+  \typ{PASS: Ucharcat 65 11 is letter}
+\else
+  \typ{FAIL: Ucharcat 65 11 not letter}
+\fi
+\ifcat\Ucharcat 65 12 1
+  \typ{PASS: Ucharcat 65 12 is other}
+\else
+  \typ{FAIL: Ucharcat 65 12 not other}
+\fi
+\def\space{ }
+\ifcat\Ucharcat 32 10 \space
+  \typ{PASS: Ucharcat 32 10 is space}
+\else
+  \typ{FAIL: Ucharcat 32 10 not space}
+\fi
+\ifcat\Ucharcat 123 1 {
+  \typ{PASS: Ucharcat 123 1 is left brace}
+\else
+  \typ{FAIL: Ucharcat 123 1 not left brace}
+\fi
+\ifcat\Ucharcat 125 2 }
+  \typ{PASS: Ucharcat 125 2 is right brace}
+\else
+  \typ{FAIL: Ucharcat 125 2 not right brace}
+\fi
+\catcode`\~=13
+\def~{ACTIVE_TILDE}
+\ifnum\pdfstrcmp{\Ucharcat 126 13}{ACTIVE_TILDE}=0
+  \typ{PASS: Ucharcat active char expands}
+\else
+  \typ{FAIL: Ucharcat active char failed}
+\fi
+
+\typ{TEST 4: invalid catcode Ucharcat}
+\typ{Testing catcode 0 (Escape):}
+\Ucharcat 65 0
+
+\typ{Testing catcode 5 (EOL):}
+\Ucharcat 65 5
+
+\typ{Testing catcode 9 (Ignored):}
+\Ucharcat 65 9
+
+\typ{Testing catcode 14 (Comment):}
+\Ucharcat 65 14
+
+\typ{Testing catcode 15 (Invalid):}
+\Ucharcat 65 15
+
+\typ{TEST 9: invalid character Ucharcat}
+
+\typ{Testing negative character:}
+\Ucharcat -1 11
+
+\typ{Testing out-of-bounds character (0x110000):}
+\Ucharcat 1114112 11
+
+\typ{END}
+\end
+

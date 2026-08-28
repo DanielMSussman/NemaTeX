@@ -1,0 +1,101 @@
+% Test file for simple l3kernel utility primitives:
+%   \pdfpageheight, \pdfpagewidth     
+%   \pdfresettimer, \pdfelapsedtime  
+%   \pdfshellescape                 
+%   \pdfsetrandomseed, \pdfrandomseed 
+%   \pdfsavepos, \pdflastxpos, \pdflastypos
+%% Public domain.
+%% Daniel M Sussman (2026)
+
+\catcode`\{=1 \catcode`\}=2 \catcode`\#=6
+\def\typ#1{\immediate\write-1 {#1}}
+
+\typ{START}
+
+\typ{TEST 1: pdfpagewidth and pdfpageheight}
+\pdfpagewidth=500pt
+\pdfpageheight=700pt
+\typ{\the\pdfpagewidth}
+\typ{\the\pdfpageheight}
+
+\typ{TEST 2: pdfresettimer and pdfelapsedtime}
+\pdfresettimer
+\ifnum\pdfelapsedtime<0
+  \typ{FAIL: elapsed time negative}
+\else
+  \typ{PASS: elapsed time non-negative}
+\fi
+
+\typ{TEST 3: pdfshellescape}
+\typ{\the\pdfshellescape}
+\ifnum\pdfshellescape=0
+  \typ{PASS: shellescape is 0}
+\else
+  \typ{FAIL: shellescape is not 0}
+\fi
+
+\typ{TEST 4: pdfsetrandomseed and pdfrandomseed}
+\pdfsetrandomseed 12345
+\typ{\the\pdfrandomseed}
+\ifnum\pdfrandomseed=12345
+  \typ{PASS: random seed matches}
+\else
+  \typ{FAIL: random seed mismatch}
+\fi
+
+\typ{TEST 5: Position tracking}
+\ifnum\pdflastxpos=0
+  \typ{PASS: initial lastxpos is 0}
+\else
+  \typ{FAIL: initial lastxpos non-zero}
+\fi
+\ifnum\pdflastypos=0
+  \typ{PASS: initial lastypos is 0}
+\else
+  \typ{FAIL: initial lastypos non-zero}
+\fi
+
+\shipout\hbox{\pdfsavepos}
+\ifnum\pdflastxpos>0
+  \typ{PASS: lastxpos is positive after shipout}
+\else
+  \typ{FAIL: lastxpos non-positive}
+\fi
+\ifnum\pdflastypos>0
+  \typ{PASS: lastypos is positive after shipout}
+\else
+  \typ{FAIL: lastypos non-positive}
+\fi
+
+\count10=\pdflastxpos
+\shipout\hbox{\kern 100pt\pdfsavepos}
+\count11=\pdflastxpos
+\advance\count11 by -\count10
+\ifnum\count11=6553600
+  \typ{PASS: exact 100pt horizontal displacement}
+\else
+  \typ{FAIL: unexpected horizontal displacement}
+\fi
+
+\pdfhorigin=2in
+\shipout\hbox{\pdfsavepos}
+\ifnum\pdflastxpos=\pdfhorigin
+  \typ{PASS: custom pdfhorigin respected}
+\else
+  \typ{FAIL: custom pdfhorigin not respected}
+\fi
+
+\pdfvorigin=1in
+\pdfpageheight=10in
+\shipout\vbox{\kern 1in\pdfsavepos}
+\count10=\pdfpageheight
+\advance\count10 by -\pdfvorigin
+\advance\count10 by -\dimexpr 1in\relax
+\ifnum\pdflastypos=\count10
+  \typ{PASS: custom pdfpageheight and pdfvorigin respected}
+\else
+  \typ{FAIL: custom pdfpageheight and pdfvorigin not respected}
+\fi
+
+\typ{END}
+\end

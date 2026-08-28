@@ -441,9 +441,9 @@
 \def\negthinspace{\kern-.16667em }
 \def\enspace{\kern.5em }
 
-\def\enskip{\hskip.5em\relax}
-\def\quad{\hskip1em\relax}
-\def\qquad{\hskip2em\relax}
+\def\enskip{\relax\ifmmode\tagstructbegin{mspace}\hskip.5em\relax\tagstructend\else\hskip.5em\relax\fi}
+\def\quad{\relax\ifmmode\tagstructbegin{mspace}\hskip1em\relax\tagstructend\else\hskip1em\relax\fi}
+\def\qquad{\relax\ifmmode\tagstructbegin{mspace}\hskip2em\relax\tagstructend\else\hskip2em\relax\fi}
 
 \def\smallskip{\vskip\smallskipamount}
 \def\medskip{\vskip\medskipamount}
@@ -719,6 +719,10 @@
 \def\Bigg#1{{\hbox{$\left#1\vbox to17.5\p@{}\right.\n@space$}}}
 \def\n@space{\nulldelimiterspace\z@ \m@th}
 
+\def\choose{\atopwithdelims()}
+\def\brack{\atopwithdelims[]}
+\def\brace{\atopwithdelims\{\}}
+
 \def\mathpalette#1#2{\mathchoice{#1\displaystyle{#2}}%
   {#1\textstyle{#2}}{#1\scriptstyle{#2}}{#1\scriptscriptstyle{#2}}}
 \def\root#1\of{\Uroot 0 "221A #1 }
@@ -728,12 +732,13 @@
 \def\phantom{\v@true\h@true\ph@nt}
 \def\ph@nt{\ifmmode\def\next{\mathpalette\mathph@nt}%
   \else\let\next\makeph@nt\fi\next}
-\def\makeph@nt#1{\setbox\z@\hbox{#1}\finph@nt}
-\def\mathph@nt#1#2{\setbox\z@\hbox{$\m@th#1{#2}$}\finph@nt}
-\def\finph@nt{\setbox\tw@\null
-  \ifv@ \ht\tw@\ht\z@ \dp\tw@\dp\z@\fi
-  \ifh@ \wd\tw@\wd\z@\fi \box\tw@}
-\def\mathstrut{\vphantom(}
+\def\makeph@nt#1{\setbox\z@\hbox{\tagstructbegin{mphantom}#1\tagstructend}\finph@nt}
+\def\mathph@nt#1#2{\setbox\z@\hbox{\tagstructbegin{mphantom}$\m@th#1{#2}$\tagstructend}\finph@nt}
+\def\finph@nt{%
+  \ifv@\else\ht\z@\z@\dp\z@\z@\fi
+  \ifh@\else\wd\z@\z@\fi
+  \box\z@}
+\def\mathstrut{\setbox\z@\null\ht\z@8.5\p@\dp\z@3.5\p@\box\z@}
 \def\smash{\relax % \relax, in case this comes first in \halign
   \ifmmode\def\next{\mathpalette\mathsm@sh}\else\let\next\makesm@sh
   \fi\next}

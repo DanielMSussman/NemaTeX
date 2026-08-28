@@ -1,0 +1,67 @@
+START
+TEST 1: Umathcode
+2097217
+TEST 2: Uchar
+PASS: Uchar 65 is A
+PASS: Uchar 32 is space
+PASS: Uchar ABC string matches
+TEST 3: valid Ucharcat
+PASS: Ucharcat 65 11 is letter
+PASS: Ucharcat 65 12 is other
+PASS: Ucharcat 32 10 is space
+PASS: Ucharcat 123 1 is left brace
+PASS: Ucharcat 125 2 is right brace
+PASS: Ucharcat active char expands
+TEST 4: invalid catcode Ucharcat
+Testing catcode 0 (Escape):
+
+! Bad category code (0).
+l.69 \Ucharcat 65 0
+                   
+A category code for \Ucharcat must be 1..4, 6..8, or 10..13.
+I'll use 12 (other) instead.
+
+Testing catcode 5 (EOL):
+! Bad category code (5).
+l.72 \Ucharcat 65 5
+                   
+A category code for \Ucharcat must be 1..4, 6..8, or 10..13.
+I'll use 12 (other) instead.
+
+Testing catcode 9 (Ignored):
+! Bad category code (9).
+l.75 \Ucharcat 65 9
+                   
+A category code for \Ucharcat must be 1..4, 6..8, or 10..13.
+I'll use 12 (other) instead.
+
+Testing catcode 14 (Comment):
+! Bad category code (14).
+l.78 \Ucharcat 65 14
+                    
+A category code for \Ucharcat must be 1..4, 6..8, or 10..13.
+I'll use 12 (other) instead.
+
+Testing catcode 15 (Invalid):
+! Bad category code (15).
+l.81 \Ucharcat 65 15
+                    
+A category code for \Ucharcat must be 1..4, 6..8, or 10..13.
+I'll use 12 (other) instead.
+
+TEST 9: invalid character Ucharcat
+Testing negative character:
+! Bad character code (-1).
+l.86 \Ucharcat -1 
+                  11
+A character number must be between 0 and 1114111.
+I changed this one to zero.
+
+Testing out-of-bounds character (0x110000):
+! Bad character code (1114112).
+l.89 \Ucharcat 1114112 
+                       11
+A character number must be between 0 and 1114111.
+I changed this one to zero.
+
+END

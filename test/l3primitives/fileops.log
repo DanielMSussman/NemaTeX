@@ -1,0 +1,31 @@
+START
+MDFIVESUM TEST 1: empty string
+D41D8CD98F00B204E9800998ECF8427E
+MDFIVESUM TEST 2: known string
+900150983CD24FB0D6963F7D28E17F72
+MDFIVESUM TEST 3: longer string
+9E107D9D372BB6826BD81D3542A419D6
+MDFIVESUM TEST 4: macro expansion in string mode
+9E107D9D372BB6826BD81D3542A419D6
+MDFIVESUM TEST 5: file mode missing file
+PASS: mdfivesum empty for missing file
+MDFIVESUM TEST 6: known file
+8DDD8BE4B179A529AFA5F2FFAE4B9858
+FILESIZE TEST 1: nonexistent file
+PASS: filesize empty for missing file
+FILESIZE TEST 2: known file
+13
+PASS: filesize matches exact byte count
+FILEMODDATE TEST 1: nonexistent file
+PASS: moddate empty for missing file
+FILEMODDATE TEST 2: known file
+PASS: moddate starts with D:
+CREATIONDATE TEST 1: format prefix
+PASS: creationdate starts with D:
+FILEDUMP TEST 1: known file slice
+48656C6C6F
+FILEDUMP TEST 2: known file full
+48656C6C6F20576F726C64210A
+FILEDUMP TEST 3: nonexistent file
+PASS: filedump empty for missing file
+END

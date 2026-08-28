@@ -101,6 +101,8 @@ With the state encapsulated, this milestone tackles the internal logic and struc
 
 ...Many of the above implementations are the basic version. There's lots of cleaning, refactoring, and improvement to work on. The goal is to carve nature at the joints; for now we've hacked at it with a spoon.
 
+- [x]  make an iterator for the texMemory, replacing a lot of the `while (p!=nullword)` stuff
+    - [x] use throughout where appropriate
 
 - [x] Various primitives, etc
     - [x] tex engine version / existence
@@ -116,22 +118,23 @@ With the state encapsulated, this milestone tackles the internal logic and struc
         - [x] extract a KnuthPlass core that is independent of the engine state
         - [ ] other composition candidates: LineAssembler (for post_line_break), HyphenationScanner for try_hyphenation_sequence, and a LineBreakTracer for the diagnostic dispatch_events stuff
     - [ ] alignment: PreambleScanner (initialize_alignment and get_preamble_token), AlignmentRenderer (finalize_alignment), and possibly a TableTagManager. 
-        - [ ] just noticed that resume_after_display is here, instead of near end_display_math?
+        - [ ] just noticed that resume_after_display is here, instead of (perhaps?) near end_display_math?
     - [ ] math list -- extract out the math AST noads from the main Memory
-        - [ ] math AST: small variant with side tables a la the pageIR
-            - [ ] freeing and error recovery -- walk once to tell the memory to clean nodes up if needed, then `.clear()`
-        - [ ] remove noads from the node organization and the texmemory class altogether
         - [ ] split candidates: a MathRenderer (AST->hlist), MathModeManager, and something to do with all of the MathParameters (depends on FontManager reorg)
-    - [ ] fold away / reorganize interaction manager and display printers
 
-- [x]  make an iterator for the texMemory, replacing a lot of the `while (p!=nullword)` stuff
-    - [x] use throughout where appropriate
+- [ ] all those node offsets... do we need them? should we reorganize scan_math?
     
 ## Milestone 8: Architecture, cleaning, improvements, part 3 (deeper font stuff, etc)
 
+- [ ] Think about what luatex did... right now we are using a memory word in box nodes (etc) to hold a struct tree root... would could index (also? instead of?) into a side-table registry for nodes in general
+
 - [ ] primitives for selecting otf font features (or disabling tex ligatures)
 
-- [ ] OTF Math -- check the many lingering issues (`ua2gentle` math chapter shows a few inconsistencies. Surds.). 
+- [ ] OTF Math -- when viewed in okular there seems to be pixel-level discrepancies in lining up the vinculum with the surd, which vanish when viewed at high-enough zoom...  might be a pdf-viewer-based issue, or it might be something I need to fix
+- [ ] math list -- extract out the math AST noads from the main Memory?
+    - [ ] math AST: small variant with side tables a la the pageIR
+        - [ ] freeing and error recovery -- walk once to tell the memory to clean nodes up if needed, then `.clear()`
+    - [ ] remove noads from the node organization and the texmemory class altogether
 
 - [ ] comment in OTF reconstituter header. 
     - [ ] OTF reconstituter improvements
@@ -154,7 +157,6 @@ With the state encapsulated, this milestone tackles the internal logic and struc
 
 - [x] e-tex extensions
 - [ ] things required for the l3 kernel (`notes/l3kernel.md`)
-    - [ ] think more about expl3
 - [ ] audit engine constants
     - [ ] reimplement hash table (current fingerprinting limits cs capacity to 16387)
     - [x] Put the string pool on the heap as a vector
@@ -162,6 +164,7 @@ With the state encapsulated, this milestone tackles the internal logic and struc
 
 ## Milestone 11: error messages
 
+- [ ] finish the reorganization so that all warnings and errors use the `reporter->emit(...)` framework
 - [x] allow swapping the tex error reporter with a different one (`notes/errors.md`)
     - [x] proof of principle implementation with clang-inspired diagnostics for 3-4 types of errors
 - [ ] expressive errors for all messages (?)

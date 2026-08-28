@@ -106,6 +106,7 @@ add_custom_target(formats ALL
         ${CMAKE_BINARY_DIR}/ua2plain.fmt
         ${CMAKE_BINARY_DIR}/slides.fmt
 )
+add_dependencies(formats ${PROJECT_NAME})
 
 
 enable_testing()

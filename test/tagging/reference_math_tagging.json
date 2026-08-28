@@ -1,0 +1,674 @@
+[
+{
+    "id": "standalone_superscript",
+    "mode": "inline",
+    "parent_tag": "P",
+    "expected_tree": {
+      "tag": "math",
+      "children": [
+        {
+          "tag": "msup",
+          "children": [
+            { "tag": "mi", "text": "x" },
+            {
+              "tag": "mrow",
+              "children": [
+                { "tag": "mn", "text": "2" }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "standalone_subscript",
+    "mode": "inline",
+    "parent_tag": "P",
+    "expected_tree": {
+      "tag": "math",
+      "children": [
+        {
+          "tag": "msub",
+          "children": [
+            { "tag": "mi", "text": "a" },
+            {
+              "tag": "mrow",
+              "children": [
+                { "tag": "mi", "text": "i" }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "display_integral_nolimits",
+    "mode": "display",
+    "parent_tag": "Formula",
+    "expected_tree": {
+      "tag": "math",
+      "children": [
+        {
+          "tag": "msubsup",
+          "children": [
+            { "tag": "mo", "text": "∫" },
+            {
+              "tag": "mrow",
+              "children": [
+                { "tag": "mn", "text": "0" }
+              ]
+            },
+            {
+              "tag": "mrow",
+              "children": [
+                { "tag": "mn", "text": "1" }
+              ]
+            }
+          ]
+        },
+        { "tag": "mi", "text": "x" }
+      ]
+    }
+  },
+  {
+    "id": "display_partial_limits_under",
+    "mode": "display",
+    "parent_tag": "Formula",
+    "expected_tree": {
+      "tag": "math",
+      "children": [
+        {
+          "tag": "munder",
+          "children": [
+            { "tag": "mo", "text": "∑" },
+            {
+              "tag": "mrow",
+              "children": [
+                { "tag": "mi", "text": "i" },
+                { "tag": "mo", "text": "=" },
+                { "tag": "mn", "text": "0" }
+              ]
+            }
+          ]
+        },
+        { "tag": "mi", "text": "x" }
+      ]
+    }
+  },
+  {
+    "id": "inline_overline",
+    "mode": "inline",
+    "parent_tag": "P",
+    "expected_tree": {
+      "tag": "math",
+      "children": [
+        {
+          "tag": "mover",
+          "children": [
+            {
+              "tag": "mrow",
+              "children": [
+                { "tag": "mi", "text": "x" },
+                { "tag": "mo", "text": "+" },
+                { "tag": "mn", "text": "1" }
+              ]
+            },
+            { "tag": "mo", "text": "¯" }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "inline_binomial_choose",
+    "mode": "inline",
+    "parent_tag": "P",
+    "expected_tree": {
+      "tag": "math",
+      "children": [
+        {
+          "tag": "mrow",
+          "children": [
+            { "tag": "mo", "text": "(" },
+            {
+              "tag": "mfrac",
+              "children": [
+                {
+                  "tag": "mrow",
+                  "children": [
+                    { "tag": "mi", "text": "n" }
+                  ]
+                },
+                {
+                  "tag": "mrow",
+                  "children": [
+                    { "tag": "mi", "text": "k" }
+                  ]
+                }
+              ]
+            },
+            { "tag": "mo", "text": ")" }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "simple_square_root",
+    "mode": "inline",
+    "parent_tag": "P",
+    "expected_tree": {
+      "tag": "math",
+      "children": [
+        {
+          "tag": "msqrt",
+          "children": [
+            {
+              "tag": "mrow",
+              "children": [
+                { "tag": "mi", "text": "x" }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "square_root_of_sum",
+    "mode": "inline",
+    "parent_tag": "P",
+    "expected_tree": {
+      "tag": "math",
+      "children": [
+        {
+          "tag": "msqrt",
+          "children": [
+            {
+              "tag": "mrow",
+              "children": [
+                {
+                  "tag": "msup",
+                  "children": [
+                    { "tag": "mi", "text": "x" },
+                    {
+                      "tag": "mrow",
+                      "children": [
+                        { "tag": "mn", "text": "2" }
+                      ]
+                    }
+                  ]
+                },
+                { "tag": "mo", "text": "+" },
+                {
+                  "tag": "msup",
+                  "children": [
+                    { "tag": "mi", "text": "y" },
+                    {
+                      "tag": "mrow",
+                      "children": [
+                        { "tag": "mn", "text": "2" }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "cube_root",
+    "mode": "inline",
+    "parent_tag": "P",
+    "expected_tree": {
+      "tag": "math",
+      "children": [
+        {
+          "tag": "mroot",
+          "children": [
+            {
+              "tag": "mrow",
+              "children": [
+                { "tag": "mi", "text": "x" }
+              ]
+            },
+            { "tag": "mn", "text": "3" }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "nth_root",
+    "mode": "inline",
+    "parent_tag": "P",
+    "expected_tree": {
+      "tag": "math",
+      "children": [
+        {
+          "tag": "mroot",
+          "children": [
+            {
+              "tag": "mrow",
+              "children": [
+                { "tag": "mn", "text": "1" },
+                { "tag": "mo", "text": "+" },
+                {
+                  "tag": "msup",
+                  "children": [
+                    { "tag": "mi", "text": "x" },
+                    {
+                      "tag": "mrow",
+                      "children": [
+                        { "tag": "mi", "text": "n" }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            { "tag": "mi", "text": "n" }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "display_composite_radical",
+    "mode": "display",
+    "parent_tag": "Formula",
+    "expected_tree": {
+      "tag": "math",
+      "children": [
+        {
+          "tag": "mroot",
+          "children": [
+            {
+              "tag": "mrow",
+              "children": [
+                {
+                  "tag": "msqrt",
+                  "children": [
+                    {
+                      "tag": "mrow",
+                      "children": [
+                        {
+                          "tag": "mfrac",
+                          "children": [
+                            {
+                              "tag": "mrow",
+                              "children": [
+                                { "tag": "mn", "text": "1" }
+                              ]
+                            },
+                            {
+                              "tag": "mrow",
+                              "children": [
+                                { "tag": "mn", "text": "2" }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                },
+                { "tag": "mo", "text": "+" },
+                { "tag": "mn", "text": "4" }
+              ]
+            },
+            { "tag": "mn", "text": "3" }
+          ]
+        },
+        { "tag": "mo", "text": "+" },
+        { "tag": "mn", "text": "0" }
+      ]
+    }
+  },
+  {
+    "id": "inline_fraction",
+    "mode": "inline",
+    "parent_tag": "P",
+    "expected_tree": {
+      "tag": "math",
+      "children": [
+        {
+          "tag": "mrow",
+          "children": [
+            {
+              "tag": "mfrac",
+              "children": [
+                {
+                  "tag": "mrow",
+                  "children": [
+                    { "tag": "mn", "text": "1" }
+                  ]
+                },
+                {
+                  "tag": "mrow",
+                  "children": [
+                    { "tag": "mn", "text": "2" }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        { "tag": "mo", "text": "+" },
+        { "tag": "mn", "text": "3" }
+      ]
+    }
+  },
+  {
+    "id": "display_fraction",
+    "mode": "display",
+    "parent_tag": "Formula",
+    "expected_tree": {
+      "tag": "math",
+      "children": [
+        {
+          "tag": "mrow",
+          "children": [
+            {
+              "tag": "mfrac",
+              "children": [
+                {
+                  "tag": "mrow",
+                  "children": [
+                    { "tag": "mi", "text": "a" }
+                  ]
+                },
+                {
+                  "tag": "mrow",
+                  "children": [
+                    { "tag": "mi", "text": "b" }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "subscript_and_superscript",
+    "mode": "inline",
+    "parent_tag": "P",
+    "expected_tree": {
+      "tag": "math",
+      "children": [
+        {
+          "tag": "msubsup",
+          "children": [
+            { "tag": "mi", "text": "x" },
+            {
+              "tag": "mrow",
+              "children": [
+                { "tag": "mn", "text": "1" }
+              ]
+            },
+            {
+              "tag": "mrow",
+              "children": [
+                { "tag": "mn", "text": "2" }
+              ]
+            }
+          ]
+        },
+        { "tag": "mo", "text": "+" },
+        { "tag": "mn", "text": "3" }
+      ]
+    }
+  },
+  {
+    "id": "display_limits_sum",
+    "mode": "display",
+    "parent_tag": "Formula",
+    "expected_tree": {
+      "tag": "math",
+      "children": [
+        {
+          "tag": "munderover",
+          "children": [
+            { "tag": "mo", "text": "∑" },
+            {
+              "tag": "mrow",
+              "children": [
+                { "tag": "mi", "text": "i" },
+                { "tag": "mo", "text": "=" },
+                { "tag": "mn", "text": "0" }
+              ]
+            },
+            {
+              "tag": "mrow",
+              "children": [
+                { "tag": "mi", "text": "n" }
+              ]
+            }
+          ]
+        },
+        {
+          "tag": "msub",
+          "children": [
+            { "tag": "mi", "text": "a" },
+            {
+              "tag": "mrow",
+              "children": [
+                { "tag": "mi", "text": "i" }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "fenced_fraction",
+    "mode": "inline",
+    "parent_tag": "P",
+    "expected_tree": {
+      "tag": "math",
+      "children": [
+        {
+          "tag": "mrow",
+          "children": [
+            { "tag": "mo", "text": "(" },
+            {
+              "tag": "mrow",
+              "children": [
+                {
+                  "tag": "mfrac",
+                  "children": [
+                    {
+                      "tag": "mrow",
+                      "children": [
+                        { "tag": "mi", "text": "a" }
+                      ]
+                    },
+                    {
+                      "tag": "mrow",
+                      "children": [
+                        { "tag": "mi", "text": "b" }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            { "tag": "mo", "text": ")" }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "fenced_sum",
+    "mode": "inline",
+    "parent_tag": "P",
+    "expected_tree": {
+      "tag": "math",
+      "children": [
+        {
+          "tag": "mrow",
+          "children": [
+            { "tag": "mo", "text": "(" },
+            { "tag": "mi", "text": "x" },
+            { "tag": "mo", "text": "+" },
+            { "tag": "mn", "text": "1" },
+            { "tag": "mo", "text": ")" }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "display_matrix",
+    "mode": "display",
+    "parent_tag": "Formula",
+    "expected_tree": {
+      "tag": "math",
+      "children": [
+        {
+          "tag": "mrow",
+          "children": [
+            {
+              "tag": "mfrac",
+              "children": [
+                {
+                  "tag": "mrow",
+                  "children": [
+                    { "tag": "mi", "text": "A" }
+                  ]
+                },
+                {
+                  "tag": "mrow",
+                  "children": [
+                    { "tag": "mn", "text": "2" }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        { "tag": "mo", "text": "=" },
+        {
+          "tag": "mrow",
+          "children": [
+            { "tag": "mo", "text": "(" },
+            {
+              "tag": "mtable",
+              "children": [
+                {
+                  "tag": "mtr",
+                  "children": [
+                    { "tag": "mtd", "children": [{ "tag": "mn", "text": "1" }] },
+                    { "tag": "mtd", "children": [{ "tag": "mn", "text": "2" }] },
+                    { "tag": "mtd", "children": [{ "tag": "mn", "text": "3" }] }
+                  ]
+                },
+                {
+                  "tag": "mtr",
+                  "children": [
+                    { "tag": "mtd", "children": [{ "tag": "mn", "text": "4" }] },
+                    { "tag": "mtd", "children": [{ "tag": "mn", "text": "5" }] },
+                    { "tag": "mtd", "children": [{ "tag": "mn", "text": "6" }] }
+                  ]
+                },
+                {
+                  "tag": "mtr",
+                  "children": [
+                    { "tag": "mtd", "children": [{ "tag": "mn", "text": "7" }] },
+                    { "tag": "mtd", "children": [{ "tag": "mn", "text": "8" }] },
+                    { "tag": "mtd", "children": [{ "tag": "mn", "text": "9" }] }
+                  ]
+                }
+              ]
+            },
+            { "tag": "mo", "text": ")" }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "inline_mphantom",
+    "mode": "inline",
+    "parent_tag": "P",
+    "expected_tree": {
+      "tag": "math",
+      "children": [
+        { "tag": "mi", "text": "x" },
+        { "tag": "mo", "text": "+" },
+        {
+          "tag": "mphantom",
+          "children": [
+            { "tag": "mi", "text": "y" }
+          ]
+        },
+        { "tag": "mo", "text": "+" },
+        { "tag": "mi", "text": "z" }
+      ]
+    }
+  },
+  {
+    "id": "inline_mspace",
+    "mode": "inline",
+    "parent_tag": "P",
+    "expected_tree": {
+      "tag": "math",
+      "children": [
+        { "tag": "mi", "text": "x" },
+        { "tag": "mspace" },
+        { "tag": "mi", "text": "y" }
+      ]
+    }
+  },
+  {
+    "id": "inline_mtext",
+    "mode": "inline",
+    "parent_tag": "P",
+    "expected_tree": {
+      "tag": "math",
+      "children": [
+        { "tag": "mi", "text": "x" },
+        { "tag": "mo", "text": "=" },
+        { "tag": "mtext", "text": "true or false" }
+      ]
+    }
+  },
+  {
+    "id": "inline_empty_base",
+    "mode": "inline",
+    "parent_tag": "P",
+    "expected_tree": {
+      "tag": "math",
+      "children": [
+        {
+          "tag": "msubsup",
+          "children": [
+            { "tag": "mrow" },
+            {
+              "tag": "mrow",
+              "children": [
+                { "tag": "mn", "text": "1" }
+              ]
+            },
+            {
+              "tag": "mrow",
+              "children": [
+                { "tag": "mn", "text": "2" }
+              ]
+            }
+          ]
+        },
+        { "tag": "mi", "text": "x" }
+      ]
+    }
+  }
+]

@@ -1,0 +1,17 @@
+START
+RNG TEST 1: setrandomseed and randomseed
+42
+RNG TEST 2: uniform deviate with seed
+71
+38
+20
+RNG TEST 3: uniform deviate range
+0
+0
+RNG TEST 4: normal deviate with seed
+62197
+-45041
+-113033
+RNG TEST 5: reseed changes sequence
+PASS: different seeds gave different values
+END

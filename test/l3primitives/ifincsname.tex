@@ -1,0 +1,42 @@
+% Test file for \ifincsname primitive
+%% Public domain.
+%% Daniel M Sussman (2026)
+
+\catcode`\{=1 \catcode`\}=2 \catcode`\#=6
+\def\typ#1{\immediate\write-1 {#1}}
+
+\typ{START}
+
+\typ{IFINCSNAME TEST 1: false outside csname}
+\ifincsname\typ{FAIL: ifincsname true outside csname}\else\typ{PASS: ifincsname false outside csname}\fi
+
+\typ{IFINCSNAME TEST 2: true inside csname}
+\def\testtrue{\typ{PASS: ifincsname true inside csname}}
+\def\testfalse{\typ{FAIL: ifincsname false inside csname}}
+
+\csname test\ifincsname true\else false\fi\endcsname
+
+\typ{IFINCSNAME TEST 3: nested csname}
+\def\testnestedtrue{\typ{PASS: ifincsname true in nested csname}}
+\def\testnestedfalse{\typ{FAIL: ifincsname false in nested csname}}
+\def\nestedtrue{nestedtrue}
+\def\nestedfalse{nestedfalse}
+
+\csname test\csname \ifincsname nestedtrue\else nestedfalse\fi\endcsname\endcsname
+
+\typ{IFINCSNAME TEST 4: false after endcsname}
+\csname relax\endcsname
+\ifincsname\typ{FAIL: ifincsname true after endcsname}\else\typ{PASS: ifincsname false after endcsname}\fi
+
+\typ{IFINCSNAME TEST 5: true inside ifcsname}
+\ifcsname test\ifincsname true\else false\fi\endcsname
+  \typ{PASS: ifincsname true inside ifcsname}
+\else
+  \typ{FAIL}
+\fi
+
+\typ{IFINCSNAME TEST 6: false after ifcsname}
+\ifincsname\typ{FAIL: ifincsname true after ifcsname}\else\typ{PASS: ifincsname false after ifcsname}\fi
+
+\typ{END}
+\end
