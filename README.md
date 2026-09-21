@@ -1,3 +1,6 @@
+Note: this repo *does not yet contain the actual source code*. My plan is to actually open source things when I complete everything through milestone 10 (see the rough `notes/README.md` roadmap)
+
+
 # NemaTeX
 
 TeX82 is a remarkable piece of software. As a hobby project, I thought it would be fun to imagine something like "TeX28". That is: what if wanted to design the engine knowing how different document generation is now compared to then. We would probably want to be able to target a variety of output formats (DVI, perhaps, but also PDF and HTML); we would certainly want to be able to directly work with both legacy *and* modern fonts for both text and math; we would want built-in capacities for generating accessible PDFs. We also would want compilation to be fast, and today that means we should be able to actively exploit the multi-threaded architecture of modern chips. But what if, for all of those desires,  we also wanted the engine to still *be* TeX deep down (passing the "trip" test, compiling modern LaTeX documents, etc.)?

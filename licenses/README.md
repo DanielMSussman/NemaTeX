@@ -6,7 +6,7 @@ Unless otherwise noted, the code in this repository falls under the license list
 
 For an overall description of the status of how this project relates to `tex.web`, and for information about `plain.tex`, `hyphen.tex`, and multiple `.tfm` files, see `KnuthLicense.md`.
 
-The `/assets/tex/unicode-math-table.tex` is from the unicode math project, redistributed unmodified under the conditions of the LPPL. See the `LPPL.md` for license text
+The `/assets/latex` directory contains some files directly from the base latex distribution. These are redistributed unmodified under the conditions of the LPPL. See the `LPPL.md` for license text.
 
 As noted in the project root readme, there are also external libraries used -- described in the readme with license text in the associated `extern/` directory.
 

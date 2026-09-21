@@ -18,12 +18,12 @@
 \else
   \typ{FAIL: Uchar 65 mismatch}
 \fi
-\ifnum\pdfstrcmp{\Uchar 32}{ }=0
+\ifnum\strcmp{\Uchar 32}{ }=0
   \typ{PASS: Uchar 32 is space}
 \else
   \typ{FAIL: Uchar 32 mismatch}
 \fi
-\ifnum\pdfstrcmp{\Uchar 65\Uchar 66\Uchar 67}{ABC}=0
+\ifnum\strcmp{\Uchar 65\Uchar 66\Uchar 67}{ABC}=0
   \typ{PASS: Uchar ABC string matches}
 \else
   \typ{FAIL: Uchar ABC string mismatch}
@@ -58,7 +58,7 @@
 \fi
 \catcode`\~=13
 \def~{ACTIVE_TILDE}
-\ifnum\pdfstrcmp{\Ucharcat 126 13}{ACTIVE_TILDE}=0
+\ifnum\strcmp{\Ucharcat 126 13}{ACTIVE_TILDE}=0
   \typ{PASS: Ucharcat active char expands}
 \else
   \typ{FAIL: Ucharcat active char failed}
@@ -87,6 +87,28 @@
 
 \typ{Testing out-of-bounds character (0x110000):}
 \Ucharcat 1114112 11
+
+\typ{TEST 5: Umathcodenum}
+\typ{\the\Umathcodenum 65}
+\Umathcodenum 66 = 2097218
+\typ{\the\Umathcodenum 66}
+
+\typ{TEST 6: Umathcharnumdef and meaning}
+\Umathcharnumdef\testminus = 2097217
+\typ{\meaning\testminus}
+\Umathchardef\testplus = 2 3 "1234
+\typ{\meaning\testplus}
+
+\typ{TEST 7: Umathcharnum}
+$\Umathcharnum 2097217$
+$\testminus$
+\typ{PASS: Umathcharnum typeset}
+
+\typ{TEST 8: Udelcode and Udelcodenum}
+\Udelcode 40 = 1 100
+\typ{\the\Udelcodenum 40}
+\Udelcodenum 41 = 1075839077
+\typ{\the\Udelcodenum 41}
 
 \typ{END}
 \end

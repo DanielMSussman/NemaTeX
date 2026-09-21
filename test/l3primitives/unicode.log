@@ -64,4 +64,15 @@ l.89 \Ucharcat 1114112
 A character number must be between 0 and 1114111.
 I changed this one to zero.
 
+TEST 5: Umathcodenum
+2097217
+2097218
+TEST 6: Umathcharnumdef and meaning
+\Umathchar"0"1"41
+\Umathchar"2"3"1234
+TEST 7: Umathcharnum
+PASS: Umathcharnum typeset
+TEST 8: Udelcode and Udelcodenum
+1075839076
+1075839077
 END

@@ -1,0 +1,65 @@
+\nonstopmode
+% Test file for \primitive and \ifprimitive
+%   \primitive\X   -- execute \X with its original primitive meaning
+%   \ifprimitive\X -- true iff \X has its primitive meaning
+%% Public domain.
+%% Daniel M Sussman (2026)
+
+\catcode`\{=1 \catcode`\}=2 \catcode`\#=6
+\def\typ#1{\immediate\write-1 {#1}}
+
+\typ{START}
+
+\typ{IFPRIMITIVE TEST 1: unredefined primitive is primitive}
+\ifprimitive\relax
+  \typ{PASS: unredefined relax is primitive}
+\else
+  \typ{FAIL}
+\fi
+
+\typ{IFPRIMITIVE TEST 2: redefined primitive is not primitive}
+\let\relax=\undefined
+\ifprimitive\relax
+  \typ{FAIL}
+\else
+  \typ{PASS: redefined relax is not primitive}
+\fi
+
+\typ{IFPRIMITIVE TEST 3: user macro is not primitive}
+\def\mymacro{hello}
+\ifprimitive\mymacro
+  \typ{FAIL}
+\else
+  \typ{PASS: user macro is not primitive}
+\fi
+
+\typ{IFPRIMITIVE TEST 4: non-cs character is not primitive}
+\ifprimitive A
+  \typ{FAIL}
+\else
+  \typ{PASS: non-cs evaluated false}
+\fi
+
+\typ{PRIMITIVE TEST 5: execute original expandable despite redefinition}
+\def\number{REDEFINED}
+\typ{\primitive\number 42}
+
+\typ{PRIMITIVE TEST 6: execute original unexpandable despite redefinition}
+\def\def{REDEFINED}
+\primitive\def\myprimitivemacro{WORKS}
+\ifnum\strcmp{\myprimitivemacro}{WORKS}=0
+  \typ{PASS: unexpandable primitive executed via primitive}
+\else
+  \typ{FAIL}
+\fi
+
+\typ{PRIMITIVE TEST 7: non-cs token preserved in stream}
+\edef\temp{\primitive ABC}
+\ifnum\strcmp{\temp}{ABC}=0
+  \typ{PASS: non-cs characters preserved in stream}
+\else
+  \typ{FAIL: characters swallowed or altered}
+\fi
+
+\typ{END}
+\end

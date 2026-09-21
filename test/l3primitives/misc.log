@@ -1,13 +1,13 @@
 START
-TEST 1: pdfpagewidth and pdfpageheight
+TEST 1: pagewidth and pageheight
 500.0pt
 700.0pt
-TEST 2: pdfresettimer and pdfelapsedtime
+TEST 2: resettimer and elapsedtime
 PASS: elapsed time non-negative
-TEST 3: pdfshellescape
+TEST 3: shellescape
 0
 PASS: shellescape is 0
-TEST 4: pdfsetrandomseed and pdfrandomseed
+TEST 4: setrandomseed and randomseed
 12345
 PASS: random seed matches
 TEST 5: Position tracking
@@ -21,5 +21,5 @@ PASS: exact 100pt horizontal displacement
  [1]
 PASS: custom pdfhorigin respected
  [1]
-PASS: custom pdfpageheight and pdfvorigin respected
+PASS: custom pageheight and pdfvorigin respected
 END

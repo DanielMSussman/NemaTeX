@@ -33,6 +33,7 @@ endmacro()
 # Appendix A item 5d: Values for stack size, buf size, etc, may be different
 # Comment: What, exactly, does "etc" encompass? What counts as "memory usage" once we have played with the underlying memory model?
 macro(normalize_data_model)
+    normalize_regex(" ?([0-9]+) tokens dumped across ([0-9]+) entries[^\n]*\n?" "")
     normalize_regex("Memory usage before: [^\n]*" "Memory usage: [mocked]")
     normalize_regex("([0-9]+) words of memory out of ([0-9]+)" "[x] words of memory out of [y]")
     normalize_regex("([0-9]+) memory locations dumped; current usage is [^\n]*" "memory locations dumped: [mocked]")

@@ -1,0 +1,24 @@
+START
+IFPRIMITIVE TEST 1: unredefined primitive is primitive
+PASS: unredefined relax is primitive
+IFPRIMITIVE TEST 2: redefined primitive is not primitive
+PASS: redefined relax is not primitive
+IFPRIMITIVE TEST 3: user macro is not primitive
+PASS: user macro is not primitive
+IFPRIMITIVE TEST 4: non-cs character is not primitive
+PASS: non-cs evaluated false
+PRIMITIVE TEST 5: execute original expandable despite redefinition
+42
+PRIMITIVE TEST 6: execute original unexpandable despite redefinition
+PASS: unexpandable primitive executed via primitive
+PRIMITIVE TEST 7: non-cs token preserved in stream
+! Missing control sequence inserted.
+<to be read again> 
+                   A
+l.57 \edef\temp{\primitive A
+                            BC}
+The control sequence marked <to be read again> should not have appeared
+after \primitive; I will ignore \primitive.
+
+PASS: non-cs characters preserved in stream
+END

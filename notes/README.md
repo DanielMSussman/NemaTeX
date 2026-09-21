@@ -7,7 +7,7 @@ The first few milestones are all about incremental refactoring; the guiding prin
 A rough roadmap is planned out below; adjustments will be made as we go, and the milestones will not be done strictly in order.
 
 
-## Milestone 0: Foundations and build automation (tedious / trivial / done. Forgot to track time. Lets say 8 hours to get the build and first trip integration right)
+## Milestone 0: Foundations and build automation (tedious / trivial / done. Forgot to track time. Lets say 8 hours to get the build and first trip integration right) -- Done
 
 Goal: set up basic infrastructure to make development and testing more convenient.
 
@@ -17,7 +17,7 @@ Goal: set up basic infrastructure to make development and testing more convenien
     - [x] Each of the two runs uses the tripman.tex's specified sequence of keypresses (as encoded, e.g., in the `triptest/first_trip_input.txt` file), and compares the outputs to the canonical ones. The `triptest/CompareLogs.cmake` script does some simple regex stuff so that some parts of the trip.log file that are *allowed* to be different (dates, string numbers... see CompareX.cmake for details) still pass the test.
     - [x] (From milestone 2 work): the DVI comparison part of the trip test is now also implemented.
 
-## Milestone 1: Basic decomposition and mechanical cleanup (easy. 15-ish hours, but some of that blended together with milestone 0)
+## Milestone 1: Basic decomposition and mechanical cleanup (easy. 15-ish hours, but some of that blended together with milestone 0) -- Done
 
 Goal: Make a bunch of elementary (mostly mechanical) changes to the c source, without altering actual algorithms or data structures. These changes should help prepare for encapsulation in the next Milestone.
 
@@ -30,7 +30,7 @@ Goal: Make a bunch of elementary (mostly mechanical) changes to the c source, wi
     - [x] extern shenanigans on the global variables so that separate compilation will still work with everything accessing everything.
 
 
-## Milestone 2: Encapsulation of global state and removal of gotos (plenty of work, but straightforward. 33-ish hours)
+## Milestone 2: Encapsulation of global state and removal of gotos (plenty of work, but straightforward. 33-ish hours) -- Done
 
 Goal: global state is encapsulated (and perhaps starts to be spread among natural units). Also, get rid of goto statements and replace them with state machines, functions, and loops
 
@@ -47,7 +47,7 @@ Goal: global state is encapsulated (and perhaps starts to be spread among natura
 
 - [x] Pass `TeXEngineState` everywhere: Modify every function to accept a reference to the `TeXEngineState` struct. Success means there is no longer a global state, and only `int main()` creates an engine state.
 
-## Milestone 3: Actual Refactoring (120 hours-ish)
+## Milestone 3: Actual Refactoring (120 hours-ish) -- Done
 
 With the state encapsulated, this milestone tackles the internal logic and structure of the engine itself.
 
@@ -59,7 +59,7 @@ With the state encapsulated, this milestone tackles the internal logic and struc
 
 - [x] Lots of internal rearrangement
 
-## Milestone 4: pdf output and otf fonts (60-ish? I've stopped keeping careful track)
+## Milestone 4: pdf output and otf fonts (60-ish? I've stopped keeping careful track) -- Done
 
 - [x] harfbuzz for opentype fonts
 
@@ -71,7 +71,7 @@ With the state encapsulated, this milestone tackles the internal logic and struc
     - [x] Reporter facade for logger / interaction manager / error handler
     - [x] ListBuilder class that owns par / align / box / math by composition (produce lists from tokens)
 
-## Milestone 5: Tagging and architecture 
+## Milestone 5: Tagging and architecture -- Done
 
 - [x] better unicode math
 
@@ -79,7 +79,7 @@ With the state encapsulated, this milestone tackles the internal logic and struc
 
 - [x] basic pdf and mathml tagging
 
-## Milestone 6: Architecture, cleaning, improvements, part 1
+## Milestone 6: Architecture, cleaning, improvements, part 1 -- Done
 
 ...Many of the above implementations are the basic version. There's lots of cleaning, refactoring, and improvement to work on. The goal is to carve nature at the joints; for now we've hacked at it with a spoon.
 
@@ -119,8 +119,9 @@ With the state encapsulated, this milestone tackles the internal logic and struc
         - [ ] other composition candidates: LineAssembler (for post_line_break), HyphenationScanner for try_hyphenation_sequence, and a LineBreakTracer for the diagnostic dispatch_events stuff
     - [ ] alignment: PreambleScanner (initialize_alignment and get_preamble_token), AlignmentRenderer (finalize_alignment), and possibly a TableTagManager. 
         - [ ] just noticed that resume_after_display is here, instead of (perhaps?) near end_display_math?
-    - [ ] math list -- extract out the math AST noads from the main Memory
+    - [ ] math list
         - [ ] split candidates: a MathRenderer (AST->hlist), MathModeManager, and something to do with all of the MathParameters (depends on FontManager reorg)
+        - [ ] extract out the math AST noads from the main Memory?
 
 - [ ] all those node offsets... do we need them? should we reorganize scan_math?
     
@@ -130,7 +131,10 @@ With the state encapsulated, this milestone tackles the internal logic and struc
 
 - [ ] primitives for selecting otf font features (or disabling tex ligatures)
 
-- [ ] OTF Math -- when viewed in okular there seems to be pixel-level discrepancies in lining up the vinculum with the surd, which vanish when viewed at high-enough zoom...  might be a pdf-viewer-based issue, or it might be something I need to fix
+- [ ] OTF Math 
+    - [ ]  when viewed in okular there seems to be pixel-level discrepancies in lining up the vinculum with the surd, which vanish when viewed at high-enough zoom...  might be a pdf-viewer-based issue, or it might be something I need to fix
+    - [ ] issues reported by mathsubsup children number in firefox on the math_tagging test
+    - [ ] extensible delimiter ordering... check pmatrix example in ua2gentle output. I thought I had already handled this correctly, and most delimiters look right. Something is fishy
 - [ ] math list -- extract out the math AST noads from the main Memory?
     - [ ] math AST: small variant with side tables a la the pageIR
         - [ ] freeing and error recovery -- walk once to tell the memory to clean nodes up if needed, then `.clear()`
@@ -144,23 +148,41 @@ With the state encapsulated, this milestone tackles the internal logic and struc
 
 - [ ] `src/common` sudirectory. Are we happy with the things that are in this space?
     - [ ] constants
+    - [ ] geometry
     - [ ] enums
     - [ ] primitive types
+    - [ ] primitives
     - [ ] structs
 
-## Milestone 9: macro storage and dynamic memory
+## Milestone 9: macro storage and dynamic memory -- Done
 
-- [ ] macros / immutable token sequences separate memory arrays / vectors? (`notes/tokenStore.md`)
+- [x] macros / immutable token sequences separate memory arrays / vectors? (`notes/tokenStore.md`)
+- [x] system for ephemeral macros (i.e., token store handles only truly immutable things, making it more like the string pool)
 
 
 ## Milestone 10: e-TeX and LaTeX
 
 - [x] e-tex extensions
-- [ ] things required for the l3 kernel (`notes/l3kernel.md`)
+- [x] things required for the l3 kernel (`notes/l3kernel.md`)
+    - [x] implemented primitives and passing tests
+    - [x] [rename](https://chat.stackexchange.com/transcript/message/69172815#69172815) pdftex primitives prefixed with `pdf` to the xetex/hitex/prote equivalent. For instance, [here](https://github.com/TeX-Live/texlive-source/blob/trunk/texk/web2c/hitexdir/hitex.w#L27168) 
+
 - [ ] audit engine constants
-    - [ ] reimplement hash table (current fingerprinting limits cs capacity to 16387)
+    - [x] reimplement hash table (current fingerprinting limits cs capacity to 16387)
+    - [x] hyphenation limits
     - [x] Put the string pool on the heap as a vector
     - [x] fix the limited `max_halfword` kludge
+    - [ ] other constants
+
+- [x] compile anything with latex and a package
+- [ ] compile with base packages... see `notes/latex.md`
+    - [ ] graphics vs graphicx
+    - [ ] color / xcolor
+- [ ] latex test suite?
+
+- [x] made some helpers in scanner_raii_guards, etc; could be reused elsewhere? 
+
+- [ ] various monkeying around with latex cfg files, etc... audit the `assets/latex` directory, think hard about this, etc.
 
 ## Milestone 11: error messages
 
@@ -170,7 +192,7 @@ With the state encapsulated, this milestone tackles the internal logic and struc
 - [ ] expressive errors for all messages (?)
     - [ ] decision: do we actually want to introduce token provenance? If so, how?
 
-## Milestone 12: Basic HTML generation
+## Milestone 12: Basic HTML generation -- Done
 
 Frustrated with trying to get videos in pfds to work, it's time to implement a fixed-layout html generator. Should be visually the same as pdf output
 
@@ -216,7 +238,7 @@ Goal: introduce engine-level primitives to allow safe, concurrent macro expansio
 
 Currently, the `input_character_map` just enforces 7 (7!)-bit input (but our nodes are arranged to have room for 21 bits). We should build out an actual unicode scanner that can hand the engine codepoints, and then start confronting all of the times that the number `256` is used in the codebase
 
-# Milestone 17: dynamic and separated memory
+# Milestone 17: dynamic and separated memory -- Done
 
 - [x] strong typing of the pointer -> NodePtr (or similar), which will use 32 bits to hold both an index and a tag.
 - [x] Split the monolithic vector of nodes into a small number of vectors, one for each different size of node / noad. Use the tagged pointer to index into the correct vector
@@ -226,7 +248,22 @@ Currently, the `input_character_map` just enforces 7 (7!)-bit input (but our nod
 
 Perhaps in keeping with the "where is the boundary between the engine and macro layers", we should think hard about implementing a small number of extremely standard packages at the engine level.
 
+- [x] macro profiling instrumentation as a pre-req
+- [ ] consider patching in primitive versions of a small subset of latex core macros (e.g., combinators, or keys_set:nn, or string utilities, regex stuff)
+    - [x] idea: if we are about to dump the latex format and if we detect that expl3 is active, monkey with the setup and redirect to the appropriate engine-level routine. 
+    - [ ] current best idea for a name for monkey-patching macros: macaque-ro patching. Come up with either a better or a worse pun.
+- [ ] ... keyval (l3keys? keyval.sty? xkeyval?) ? geometry? graphicx? etc? Where is the boundary? Some things are just about computation and data manipulation in the scanner; some reach into the pageIR, etc.
+
+
 # Milestone X:  unsorted ideas (i.e., the staging ground for future milestones)
+
+- [ ] audit third party dependencies... we typically leaned toward picking the easiest to integrate, not (necessarily) the ideal choice. Examples:
+    - [ ]  miniz vs libdeflate?
+    - [ ] tsl::robin-map? 
+
+- [ ] auto-format generation...
+    * the idea would be something like `nematex --auto-checkpoint main.tex` checks for a `main.nema.fmt` file. If missing (or see below), parse main.tex, record dependencies, hit a `\checkpointformat`, dump the format with a manifest, and continue typesetting. If not missing, memory-map `main.tex`, find the checkpoint, tally up newlines (for error reporting), loads the fmt file, and points the scanner at the byte after the checkpoint. For dependencies, need to keep track of a manifest of every file opened and their hashes (for input) or names (for output). On load, read the manifest from the fmt file, check if the hashes are the same, and if any file has change just invalidate the cache of files.
+    * need some rules, like "using this means the checkpoint primitive must be in main", etc
 
 - [ ] Revisit pageIR. 
     - [ ] Drawing operations?
@@ -237,8 +274,6 @@ Perhaps in keeping with the "where is the boundary between the engine and macro 
 - [ ] IR of enough state and memory before linebreaking?
 
 - [ ] citations (eplain? something else?)
-
-- [ ] more pdf flexibility (`notes/pdf.md`)
 
 - [ ] anything still in the notes directory
 

@@ -1,0 +1,31 @@
+\documentclass{article}
+\usepackage{color}
+\usepackage{xcolor}
+
+\begin{document}
+
+\section*{Color Test Suite}
+
+\subsection*{1. Standard LaTeX color Package}
+This is \textcolor{blue}{blue text}, and this is \textcolor{red}{red text}.
+
+\subsection*{2. Extended xcolor Package}
+This is \textcolor{blue!50!red}{bluish-purple text (50\% blue, 50\% red)}.
+
+\colorbox{yellow}{This is text on a yellow background.}
+
+\subsection*{3. LaTeX3 l3color Backend}
+Normal text.
+\ExplSyntaxOn
+\group_begin:
+\color_select:nn { rgb } { 0 , 0.7 , 0.2 }
+This~is~green~text~selected~via~l3color.
+\par
+\color_select:nn { gray } { 0.5 }
+This~is~gray~text~selected~via~l3color.
+\group_end:
+\ExplSyntaxOff
+
+Normal text restored.
+
+\end{document}

@@ -1,0 +1,124 @@
+\batchmode
+\documentclass{article}
+\usepackage[letterpaper, margin=1in]{geometry}
+\usepackage{graphicx}
+\begin{document}
+
+
+\section{A chunk of my lecture notes}
+
+One obvious suspect in the poor results above is the crude, first-order accuracy of the forward Euler method.
+ The local truncation error of $\mathcal{O}(\Delta t^2)$ means that the \emph{global} error, accumulated over many steps to reach a fixed time $T = N\Delta t$, will scale as $\mathcal{O}(\Delta t)$.
+ For many applications, this is simply not good enough.
+A logical next step would be to find a method that accounts for higher-order terms in the Taylor series expansion of $\mathbf{y}(t+\Delta t)$.
+
+
+Expanding $\mathbf{y}(t+\Delta t)$ to higher order, this time going back to a scalar example to keep the notation clean:
+\begin{equation}
+    y(t+\Delta t) = y(t) + \Delta t \dot{y}(t) + \frac{\Delta t^2}{2} \ddot{y}(t) + \mathcal{O}(\Delta t^3).
+\end{equation}
+We know that $\dot{y} = f(y,t)$.
+Adopting the notation in which $f_y$ and $f_t$ mean the derivative of $f$ with respect to the subscripted variable, we can find the second derivative, $\ddot{y}$, by applying the chain rule to $f$:
+\begin{equation}
+    \ddot{y} = \frac{d}{dt} f(y(t), t) = \frac{\partial f}{\partial y}\frac{dy}{dt} + \frac{\partial f}{\partial t} = f_y f + f_t.
+\end{equation}
+Substituting these into the Taylor expansion gives us a second-order accurate update rule:
+\begin{equation}
+    y(t+\Delta t) = y(t) + \Delta t f + \frac{\Delta t^2}{2} (f_y f + f_t) + \mathcal{O}(\Delta t^3).
+\end{equation}
+While this ``Taylor series method'' is indeed more accurate, it's often impractical.
+It requires us to analytically calculate the partial derivatives of $\mathbf{f}$, which can be extremely complicated for some of the complex functions that arise in physical simulations.
+So, while tempting in its simplicity, such Taylor series methods are very rarely used in practice.
+
+\subsection{An artificial subsection}
+
+One of the most important features of Hamiltonian dynamics is that it is time-reversible -- do the integrators we are using so far have this property?
+Let's explicitly show that the answer is ``clearly not.''
+To demonstrate, let's return to the forward Euler method in the context of a simple harmonic oscillator in one dimension.
+The state vector will just be $\vec{y} = \{q, p\}$, and (choosing a convenient system of units) the time derivative is $\vec{f} = \{p, -q\}$. 
+We'll probe the time-(ir)reversibility of the method by (1) applying the forward Euler rule forward by one step from some initial state, and then (2) applying the rule again, but in the backwards ($-\Delta t$) time direction; we'll see if the system ends up where it started.
+
+Starting at $\vec{y}_0$, the forward step is just 
+\begin{equation}
+    \vec{y}_1 = \begin{pmatrix}
+    q_0 + \Delta t p_0\\
+    p_0 - \Delta t q_0\\
+    \end{pmatrix}.
+\end{equation}
+The final position after a backwards step is then $\vec{y}_f = \vec{y}_1 +(-\Delta t) f(\vec{y}_1)$.
+Evaluating this expression, we find
+\begin{equation}
+    \vec{y}_f = \begin{pmatrix}
+    q_0 + \Delta t p_0 - \Delta t p_0 + \Delta t^2 q_0\\
+    p_0 - \Delta t q_0 + \Delta t q_0 + \Delta t^2 p_0\\
+    \end{pmatrix}
+    = (1+\Delta t^2) \begin{pmatrix}
+    q_0\\
+    p_0\\
+    \end{pmatrix}.
+\end{equation}
+That is: after running time forward and then backwards, we find our system at a state different from where it started.
+Surprisingly, just a tiny adjustment to our forward Euler method can correct this flaw.
+
+
+In the context of a system governed by the Hamiltonian $\mathcal{H} = T+V$ (i.e., composed of a kinetic term that depends only on particle momenta and a potential term that depends only on positions) the symplectic Euler method is formulated as either
+\begin{equation}\label{eq:symEul1}
+   \begin{matrix}
+   p_{n+1} = \\
+   q_{n+1} = \\
+   \end{matrix}
+   \  \
+   \begin{matrix}
+   p_n - \Delta t V'(q_n)\\
+   \ \ \ q_n + \Delta t T'(p_{n+1})\\
+   \end{matrix}
+\end{equation}
+or
+\begin{equation}\label{eq:symEul2}
+   \begin{matrix}
+       q_{n+1} = \\
+       p_{n+1} = \\
+   \end{matrix}
+   \  \
+   \begin{matrix}
+       q_n + \Delta t T'(p_{n})\\
+   \ \ \ p_n - \Delta t V'(q_{n+1})\\
+   \end{matrix}
+\end{equation}
+Notice that in the first formulation, advancing the position requires knowing the \emph{future} momenta (and vice verse in the second formulation).
+Notice, furthermore, that these two formulations do the same operations but in the reverse order: a ``kick and then drift'' or a ``drift and then kick'' of the particles.
+Because of the nicely separable structure of these equations, though, implementing this is straightforward:
+
+
+
+For any function $\rho(\mathbf{q},\mathbf{p})$ of classical phase space variables, the evolution of that function governed by a Hamiltonian $\mathcal{H}$ is given by the Poisson bracket:
+\begin{equation}
+    \frac{d\rho}{dt} = \{ \rho,\mathcal{H} \} = \sum_i^N \frac{\partial\rho}{\partial\vec{q}_i}\frac{\partial\mathcal{H}}{\partial \vec{p}_i} - \frac{\partial\rho}{\partial\vec{p}_i}\frac{\partial\mathcal{H}}{\partial\vec{q}_i}
+\end{equation}
+For the purposes of writing down a formal solution, we define the Liouvillian operator, $L_{\mathcal{H}} \rho = \{ \rho, \mathcal{H} \}$.
+This lets us cast the time evolution as a simple equation with the formal solution:
+\begin{equation}
+    \frac{d\rho}{dt} = L_{\mathcal{H}} \rho \quad \Rightarrow \rho(t) = e^{t L_{\mathcal{H}}} \rho(t=0).
+\end{equation}
+
+Restricting our attention to Hamiltonians of the form $\mathcal{H} = T(\mathbf{p}) + V(\mathbf{q})$. The properties of the Poisson bracket mean that we can decompose the Liouvillian:
+\begin{equation}
+    L_{\mathcal{H}} \rho = (L_T+L_V)\rho = \{ \rho, T \} + \{ \rho, V \}.
+\end{equation}
+Each of these parts are exactly solvable, albeit only accounting for part of the system dynamics.
+
+Sadly, the evolution operator isn't $L_{\mathcal{H}}$ but $e^{t L_{\mathcal{H}}}$, and the Baker-Campbell-Hausdorff (BCH) formula tells us that we are not allowed to just split the evolution into a part that talks only to the positions and a part that talks only to the momenta.
+
+
+\begin{figure}[b!]
+\centering
+\includegraphics[width=0.4\linewidth]{testPNG.png}
+\caption{
+    \textbf{captionBold}
+    captionText
+    }
+\label{fig:figureLabel}
+\end{figure}
+
+
+\end{document}

@@ -12,5 +12,10 @@ The code in `src/utility/md5.h` and `src/utility/md5.cpp` is based on the MD5 im
 
 ## extern
 
-The `extern/` directory additionally includes license information for [miniz](https://github.com/richgel999/miniz)  (MIT license) for zlib deflation, [argh](https://github.com/adishavit/argh) (BSD-3) for command-line parsing, [stb_image](https://github.com/nothings/stb) (MIT or Unlicense) for asset decoding, and [woff2](https://github.com/google/woff2) (MIT) for font compression.
+The `extern/` directory additionally includes license information for:
+* [miniz](https://github.com/richgel999/miniz)  (MIT license) for zlib deflation
+* [tsl::robin-map](https://github.com/Tessil/robin-map/tree/master?tab=MIT-1-ov-file) for a fast hash map
+* [argh](https://github.com/adishavit/argh) (BSD-3) for command-line parsing
+* [stb_image](https://github.com/nothings/stb) (MIT or Unlicense) for asset decoding
+* [woff2](https://github.com/google/woff2) (MIT) for font compression.
 

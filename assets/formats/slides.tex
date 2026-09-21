@@ -3,21 +3,21 @@
 \input ua2plain
 
 \def\setaspectratioIVbyIII{%
-    \pdfpagewidth=1024pt
-    \pdfpageheight=768pt
+    \pagewidth=1024pt
+    \pageheight=768pt
     \hsize=896pt     
     \vsize=672pt     
-    \pdfhorigin=64pt 
-    \pdfvorigin=48pt 
+    \outputhorigin=64pt 
+    \outputvorigin=48pt 
 }
 
 \def\setaspectratioXVIbyIX{%
-    \pdfpagewidth=1280pt
-    \pdfpageheight=720pt
+    \pagewidth=1280pt
+    \pageheight=720pt
     \hsize=1152pt    
     \vsize=624pt     
-    \pdfhorigin=64pt 
-    \pdfvorigin=48pt 
+    \outputhorigin=64pt 
+    \outputvorigin=48pt 
 }
 
 % Default to 4:3
@@ -231,8 +231,8 @@
 
 % media wrappers
 \def\embedimage#1#2#3{% filename, width, height
-    \pdfximage{#1}%
-    \pdfrefximage \the\pdflastximage \space width #2 height #3%
+    \loadasset{#1}%
+    \drawasset \the\lastasset \space width #2 height #3%
 }
 
 \def\embedvideo#1#2#3{%

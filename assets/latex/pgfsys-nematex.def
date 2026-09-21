@@ -1,0 +1,99 @@
+% Copyright 2026 Daniel M. Sussman / NemaTeX project
+% PGF system driver for NemaTeX (first janky effort: direct PDF specials)
+
+\ProvidesFileRCS{pgfsys-nematex.def}
+
+% Load common pdf commands:
+\input pgfsys-common-pdf.def
+
+% NemaTeX emits IR::Special directly into the uncompressed/compressed PDF content stream.
+\def\pgfsys@invoke#1{\special{#1}}
+\def\pgfsys@outerinvoke#1{\special{#1}}
+
+% Picture lifecycle relative coordinate mapping
+\def\pgfsys@beginpicture{\special{pdf:bcontent}}
+\def\pgfsys@endpicture{\special{pdf:econtent}}
+
+% Macro alias in case any package or user code invokes \pdfliteral
+\def\pdfliteral#1{\special{#1}}
+
+% Synced hboxes
+\def\pgfsys@hboxsynced#1{%
+  {%
+    \pgfsys@begin@idscope%
+    \pgfsys@beginscope%
+    \setbox\pgf@hbox=\hbox{%
+      \hskip\pgf@pt@x%
+      \raise\pgf@pt@y\hbox{%
+        \pgf@pt@x=0pt%
+        \pgf@pt@y=0pt%
+        \pgflowlevelsynccm%
+        \pgfsys@hbox#1}%
+      \hss%
+    }%
+    \wd\pgf@hbox=0pt%
+    \ht\pgf@hbox=0pt%
+    \dp\pgf@hbox=0pt%
+    \box\pgf@hbox%
+    \pgfsys@endscope%
+    \pgfsys@end@idscope%
+  }%
+}
+
+% Page dimensions
+\def\pgfsys@papersize#1#2{\pageheight#2\relax\pagewidth#1\relax}
+\def\pgfsys@global@papersize#1#2{\global\pageheight#2\relax\global\pagewidth#1\relax}
+
+\ifx\paperheight\@undefined
+  \def\pgfsys@thepageheight{\pageheight}
+  \def\pgfsys@thepagewidth{\pagewidth}
+\fi
+
+% Position tracking via NemaTeX primitives \savepos, \lastxpos, \lastypos
+\ifx\pdfsavepos\@undefined \let\pdfsavepos\savepos \fi
+\ifx\pdflastxpos\@undefined \let\pdflastxpos\lastxpos \fi
+\ifx\pdflastypos\@undefined \let\pdflastypos\lastypos \fi
+
+\def\pgfsys@markposition#1{%
+  \savepos%
+  \edef\pgf@temp{#1}%
+  \expandafter\pgfutil@writetoaux\expandafter{%
+    \expandafter\noexpand\expandafter\pgfsyspdfmark\expandafter{\pgf@temp}{\the\lastxpos}{\the\lastypos}}%
+}
+
+\def\pgfsyspdfmark#1#2#3{%
+  \expandafter\gdef\csname pgf@sys@pdf@mark@pos@#1\endcsname{\pgfqpoint{#2sp}{#3sp}}%
+  \pgfutil@check@rerun{#1}{{#2}{#3}}%
+}
+
+\def\pgfsys@getposition#1#2{%
+  \edef\pgf@marshal{\let\noexpand#2=\expandafter\noexpand\csname pgf@sys@pdf@mark@pos@#1\endcsname}%
+  \pgf@marshal%
+}
+
+\def\pgf@sys@pdf@mark@pos@pgfpageorigin{\pgfqpoint{\hoffset}{\voffset}}
+
+% Color unstacked
+\def\pgfsys@color@unstacked#1{%
+  \special{\csname\string\color@#1\endcsname}%
+}
+
+% Resource management stubs (avoiding \pdfobj calls which do not exist in NemaTeX)
+\def\pgf@sys@setuppdfresources@plain{}
+\def\pgf@sys@addpdfresource@extgs@plain#1{}
+\def\pgf@sys@addpdfresource@colorspaces@plain#1{}
+\def\pgf@sys@addpdfresource@patterns@plain#1{}
+
+\pgfutil@setuppdfresources
+\pgfutil@addpdfresource@colorspaces{ /pgfprgb [/Pattern /DeviceRGB] }
+
+% Image inclusion via graphicx
+\def\pgfsys@imagesuffixlist{.pdf:.jpg:.jpeg:.png:}
+\def\pgfsys@defineimage{%
+  \ifx\pgf@imagewidth\pgfutil@empty\else\edef\pgf@imagewidth{width=\pgf@imagewidth,}\fi%
+  \ifx\pgf@imageheight\pgfutil@empty\else\edef\pgf@imageheight{height=\pgf@imageheight,}\fi%
+  \ifx\pgf@imagepage\pgfutil@empty\else\edef\pgf@imagepage{page=\pgf@imagepage,}\fi%
+  \edef\pgf@image{\noexpand\includegraphics[\pgf@imageheight\pgf@imagewidth]{\pgf@filename}}%
+}
+
+\endinput

@@ -1,8 +1,8 @@
 % Test file for RNG primitives (assumes the pdftex prng implementation):
-%   \pdfsetrandomseed  -- set the random seed
-%   \pdfrandomseed     -- read current seed
-%   \pdfuniformdeviate -- uniform random integer in [0, N)
-%   \pdfnormaldeviate  -- Gaussian-distributed random integer
+%   \setrandomseed  -- set the random seed
+%   \randomseed     -- read current seed
+%   \uniformdeviate -- uniform random integer in [0, N)
+%   \normaldeviate  -- Gaussian-distributed random integer
 %% Public domain.
 %% Daniel M Sussman (2026)
 
@@ -13,36 +13,36 @@
 
 \typ{RNG TEST 1: setrandomseed and randomseed}
 % Setting a seed and reading it back
-\pdfsetrandomseed 42
-\typ{\the\pdfrandomseed}
+\setrandomseed 42
+\typ{\the\randomseed}
 
 \typ{RNG TEST 2: uniform deviate with seed}
 % With a fixed seed, the sequence must be deterministic
-\pdfsetrandomseed 12345
-\typ{\pdfuniformdeviate 100}
-\typ{\pdfuniformdeviate 100}
-\typ{\pdfuniformdeviate 100}
+\setrandomseed 12345
+\typ{\uniformdeviate 100}
+\typ{\uniformdeviate 100}
+\typ{\uniformdeviate 100}
 
 \typ{RNG TEST 3: uniform deviate range}
-% \pdfuniformdeviate N returns value in [0, N)
+% \uniformdeviate N returns value in [0, N)
 % With N=1, must always be 0
-\pdfsetrandomseed 99999
-\typ{\pdfuniformdeviate 1}
-\typ{\pdfuniformdeviate 1}
+\setrandomseed 99999
+\typ{\uniformdeviate 1}
+\typ{\uniformdeviate 1}
 
 \typ{RNG TEST 4: normal deviate with seed}
 % With a fixed seed, the sequence must be deterministic
-\pdfsetrandomseed 12345
-\typ{\pdfnormaldeviate}
-\typ{\pdfnormaldeviate}
-\typ{\pdfnormaldeviate}
+\setrandomseed 12345
+\typ{\normaldeviate}
+\typ{\normaldeviate}
+\typ{\normaldeviate}
 
 \typ{RNG TEST 5: reseed changes sequence}
 % Different seeds give different sequences
-\pdfsetrandomseed 1
-\edef\seqA{\pdfuniformdeviate 1000000}
-\pdfsetrandomseed 2
-\edef\seqB{\pdfuniformdeviate 1000000}
+\setrandomseed 1
+\edef\seqA{\uniformdeviate 1000000}
+\setrandomseed 2
+\edef\seqB{\uniformdeviate 1000000}
 \ifnum\seqA=\seqB
   \typ{FAIL: different seeds gave same value}
 \else
