@@ -14,10 +14,10 @@
 \def\setaspectratioXVIbyIX{%
     \pagewidth=1280pt
     \pageheight=720pt
-    \hsize=1152pt    
-    \vsize=624pt     
-    \outputhorigin=64pt 
-    \outputvorigin=48pt 
+    \hsize=1188pt    
+    \vsize=648pt     
+    \outputhorigin=46pt 
+    \outputvorigin=36pt 
 }
 
 % Default to 4:3
@@ -25,49 +25,77 @@
 \nopagenumbers
 \parindent=0pt 
 
-% Preload standard weights and sizes
+% Family definitions 
 \def\textfamily{FiraSans}
 \def\monofamily{JetBrainsMono}
 \def\mathfamily{STIXTwoMath}
-\font\titlefont=\textfamily-SemiBold.otf at 42pt
-\font\headingfont=\textfamily-SemiBold.otf at 36pt
-\font\subheadingfont=\textfamily-SemiBold.otf at 32pt
 
+% Display / Heading fonts
+\font\titlefont=\textfamily-SemiBold.otf at 52pt
+\font\headingfont=\textfamily-SemiBold.otf at 44pt
+\font\subheadingfont=\textfamily-SemiBold.otf at 36pt
 
-\font\bodyfont=\textfamily-Regular.otf at 22pt
-\font\bodyfonti=\textfamily-Regular.otf at 18pt
-\font\bodyfontii=\textfamily-Regular.otf at 14pt
+% Declarative Level Generator
+% #1 = level suffix ('', 'i', 'ii', etc.)
+% #2 = font size
+% #3 = baselineskip
+\def\declarefontlevel#1#2#3{%
+  % Preload the fonts for this size
+  \expandafter\font\csname bodyfont#1\endcsname=\textfamily-Regular.otf at #2\relax
+  \expandafter\font\csname bodyitalic#1\endcsname=\textfamily-Italic.otf at #2\relax
+  \expandafter\font\csname bodybold#1\endcsname=\textfamily-Bold.otf at #2\relax
+  \expandafter\font\csname bodybolditalic#1\endcsname=\textfamily-BoldItalic.otf at #2\relax
+  \expandafter\font\csname bodycode#1\endcsname=\monofamily-Regular.otf at #2\relax
+  \expandafter\font\csname mathnormal#1\endcsname=\mathfamily-Regular.otf at #2\relax
+  %  Create the switcher macro (\applyfontset, \applyfontseti, etc.)
+  \expandafter\def\csname applyfontset#1\endcsname{%
+    \csname bodyfont#1\endcsname
+    \baselineskip=#3\relax
+    \expandafter\let\expandafter\rm\csname bodyfont#1\endcsname
+    \expandafter\let\expandafter\it\csname bodyitalic#1\endcsname
+    \expandafter\let\expandafter\bf\csname bodybold#1\endcsname
+    \expandafter\let\expandafter\bi\csname bodybolditalic#1\endcsname
+    \expandafter\let\expandafter\tt\csname bodycode#1\endcsname
+    \expandafter\let\expandafter\code\csname bodycode#1\endcsname
+    \expandafter\textfont0=\csname mathnormal#1\endcsname
+    \expandafter\textfont\itfam=\csname bodyitalic#1\endcsname
+    \expandafter\textfont\bffam=\csname bodybold#1\endcsname
+    \expandafter\textfont\ttfam=\csname bodycode#1\endcsname
+  }%
+}
 
-\font\bodyitalic=\textfamily-Italic.otf at 22pt
-\font\bodyitalici=\textfamily-Italic.otf at 18pt
-\font\bodyitalicii=\textfamily-Italic.otf at 14pt
+% Declare Font Sizes
+\declarefontlevel{}{28pt}{36pt}   % Level 0
+\declarefontlevel{i}{22pt}{26pt}  % Level 1
+\declarefontlevel{ii}{18pt}{24pt} % Level 2
 
-\font\bodycode=\monofamily-Regular.otf at 22pt
-\font\bodycodei=\monofamily-Regular.otf at 18pt
-
-\font\mathnormal=\mathfamily-Regular.otf at 22pt
-
+% State and Dispatch
 \newcount\nestdepth \nestdepth=0
 
 \def\setgridfont{%
-    \ifnum\nestdepth=0 \bodyfont \baselineskip=26pt \else
-    \ifnum\nestdepth=1 \bodyfonti \baselineskip=22pt \else
-    \bodyfontii \baselineskip=18pt \fi\fi
+  \ifcase\nestdepth
+    \applyfontset
+  \or
+    \applyfontseti
+  \else
+    \applyfontsetii
+  \fi
 }
 
-\def\setnormal{%
-    \setgridfont
-    \textfont0=\mathnormal
+\def\scaledown#1{%
+  \advance\nestdepth by #1\relax
+  \setgridfont
 }
+\def\setnormal{\setgridfont}
+
 \def\subheading#1{%
-    {\hfill \subheadingfont #1 \hfill}
+    \centerline{\subheadingfont #1}%
 }
-
-% Initialize defaults
 \setnormal
-\baselineskip=24pt
 
-
+% Math and text brace definitions
+\def\{{\ifmmode\lbrace\else\char`\{\fi}
+\def\}{\ifmmode\rbrace\else\char`\}\fi}
 
 % Colors and Theming
 \def\pushrgb#1#2#3{\pushcolor #1 #2 #3 255 }
@@ -76,7 +104,7 @@
 \def\green{\pushrgb{91}{101}{81}}
 \def\gray{\pushrgb{175}{175}{175}}
 
-\def\kanagawasumiink{\pushcolor 31 31 40 225}
+\def\kanagawasumiink{\pushcolor 31 31 40 255}
 
 \def\kanagawaViolet{\pushrgb{149}{127}{184}}
 \def\kanagawaWhite{\pushrgb{220}{215}{186}}
@@ -86,9 +114,110 @@
 \def\kanagawaComment{\pushrgb{114}{113}{105}}
 \def\kanagawaSpecialRed{\pushrgb{200}{64}{83}}
 
+% Kanagawa Lotus syntax highlighting theme definitions
+% https://github.com/rebelot/kanagawa.nvim
+\def\lotusbg{\pushrgb{242}{236}{188}}             % #f2ecbc (parchment background)
+\def\lotustext{\pushrgb{84}{84}{100}}             % #545464 (base code text)
+\def\kw#1{{\pushrgb{98}{76}{131}#1\popcolor}}     % Keyword (Violet)
+\def\fn#1{{\pushrgb{77}{105}{155}#1\popcolor}}    % Function (Blue)
+\def\vr#1{{\pushrgb{67}{67}{108}#1\popcolor}}     % Variable (Ink)
+\def\ty#1{{\pushrgb{89}{123}{117}#1\popcolor}}    % Type (Aqua)
+\def\co#1{{\pushrgb{204}{109}{0}#1\popcolor}}     % Constant / Enum (Orange)
+\def\nm#1{{\pushrgb{179}{91}{121}#1\popcolor}}    % Number (Pink)
+\def\st#1{{\pushrgb{111}{137}{78}#1\popcolor}}    % String (Green)
+\def\cm#1{{\pushrgb{138}{137}{128}#1\popcolor}}   % Comment (Gray)
+\def\op#1{{\pushrgb{131}{111}{74}#1\popcolor}}    % Operator (Yellow/Brown)
+
+% helper macros
+\def\bs{{\tt\char`\\}}
+\def\cbs{{\char`\\}}
+\def\_{\char`\_}
+\def\to{{\char"2192}}
+\def\LaTeX{%
+  L\kern-.36em%
+  {\setbox0=\hbox{T}%
+   \vbox to \ht0{\hbox{\scripthook A}\vss}}%
+  \kern-.15em%
+  \TeX
+}
+\def\bulletitem{%
+    \smallskip
+    \noindent
+    \hangindent=26pt \hangafter=1
+    \hbox to 26pt{\kern 10pt \char"2022\hss}%
+}
+
+\def\subbulletitem{%
+    \smallskip
+    \noindent
+    \hangindent=41pt \hangafter=1
+    \hbox to 41pt{\kern 25pt \char"2013\hss}%
+}
+\def\qq{\ \ \ \ }
+\def\{{\ifmmode\lbrace\else\char`\{\fi}
+\def\}{\ifmmode\rbrace\else\char`\}\fi}
+
+% code container... kind of like a janky verbatim
+\def\beginlotuscode{%
+    \par\vskip 10pt
+    \setbox0=\vbox\bgroup
+        \catcode`\_=12
+        \catcode`\&=12
+        \catcode`\^=12
+        \catcode`\~=12
+        \catcode`\$=12
+        \code 
+        \lotustext
+        \parindent=0pt
+        \leftskip=25pt
+        \rightskip=25pt
+        \vskip 10pt
+        % escape special characters
+        \def\{{\char`\{}%
+        \def\}{\char`\}}%
+        \def\\{\char`\\}%
+        \def\_{\char`\_}%
+        \def\#{\char`\#}%
+        \def\%{\char`\%}%
+        \def\&{\char`\&}%
+        \def\^{\char`\^}%
+        \def\~{\char`\~}%
+        \def\${\char`\$}%
+        \def\cbs{\char`\\}%
+}
+
+\def\endlotuscode{%
+        \vskip 10pt
+        \popcolor
+    \egroup
+    \noindent
+    \hbox to \hsize{%
+        {\lotusbg \rlap{\vrule width \hsize height \ht0 depth \dp0}\popcolor}%
+        \box0
+        \hfil
+    }%
+    \par\vskip 10pt
+}
 
 \def\endcolor{\popcolor}
 
+% Centered single-column container
+\def\begincentercol#1{%
+    \par\vskip 0pt
+    \hbox to \hsize\bgroup\hss
+        \vbox\bgroup
+            \hsize=#1\relax
+            \nestdepth=0
+            \setgridfont
+            \ignorespaces
+}
+
+\def\endcentercol{%
+        \par
+        \egroup  % Close \vbox
+    \hss\egroup  % Close \hbox
+    \par
+}
 % Grid Registers
 \newdimen\colgap \colgap=40pt
 \newdimen\colwidth
@@ -105,30 +234,50 @@
     \divide\blockheight by 2
 }
 
-\def\beginrow{\calcgrid \hbox to \hsize\bgroup\ignorespaces}
+\newif\iffirstcol
+\newif\iffirstblock
+
+\def\beginrow{%
+    \calcgrid
+    \firstcoltrue
+    \leavevmode
+    \hbox to \hsize\bgroup\ignorespaces
+}
 \def\endrow{\unskip\egroup}
 
 \def\begincol{%
-    \vtop\bgroup 
-        \advance\nestdepth by 1  % Increment depth
-        \setgridfont             % Apply smaller font and baseline
-        \hsize=\colwidth 
-        \gridheight=\blockheight % Pass the constrained height down
-        \divide\colgap by 2      % Scale the gap down
-        \relax
+    \unskip
+    \iffirstcol
+        \firstcolfalse
+    \else
+        \hfill  % Expands to exactly \colgap and absorbs any rounding errors
+    \fi
+    \firstblocktrue
+    \vtop\bgroup
+        \advance\nestdepth by 1
+        \setgridfont
+        \hsize=\colwidth
+        \gridheight=\blockheight
+        \divide\colgap by 2
+        \ignorespaces
 }
-\def\endcol{\egroup\hfil}
+\def\endcol{\par\egroup\ignorespaces}
 
 \def\beginblock{%
-    \vtop to \blockheight\bgroup 
-        \advance\nestdepth by 1  
-        \setgridfont             
-        \hsize=\colwidth 
-        \gridheight=\blockheight 
-        \divide\colgap by 2      
-        \relax
+    \iffirstblock
+        \firstblockfalse
+    \else
+        \vskip\colgap  % Only skip between blocks, not after the last one
+    \fi
+    \vtop to \blockheight\bgroup
+        \advance\nestdepth by 1
+        \setgridfont
+        \hsize=\colwidth
+        \gridheight=\blockheight
+        \divide\colgap by 2
+        \ignorespaces
 }
-\def\endblock{\vfil\egroup\vskip\colgap}
+\def\endblock{\par\vfil\egroup}
 
 %  Structural Macros and Tagging
 \newcount\slideno \slideno=0
@@ -136,18 +285,18 @@
 \def\titleslide#1#2{%
     \global\advance\slideno by 1
     \vglue 150pt
-    \centerline{\titlefont #1}
+    \centerline{\titlefont \vr{#1} }
     \vskip 30pt
-    \centerline{\subheadingfont \gray #2 \endcolor}
+    \centerline{\subheadingfont {\lotustext #2\popcolor}}
     \vfill\eject
 }
 
 \def\beginslide#1{%
     \global\advance\slideno by 1
     % \vglue 16pt
-    \centerline{\headingfont \blue #1 \endcolor}
+    \centerline{\headingfont \vr{#1}}
     \vskip 10pt
-    \red \hrule width \hsize height 2pt depth 0pt \endcolor
+    \ty{\hrule width \hsize height 2pt depth 0pt}
     \vskip 24pt
     
     % Calculate safe grid space: 40(vglue) + ~28(font) + 10(vskip) + 2(hrule) + 30(vskip) = 110pt
@@ -162,8 +311,6 @@
 \newcount\stepcount
 \newcount\openfragments
 
-% Reset state at the start of a slide (assuming \beginslide or similar is used, wait, here we just do it in the file? No, we don't have \beginslide defined yet. Let's define it, or just do it in \endslide since \endslide is called.)
-% Actually, there is no \beginslide. The slide just starts. But the user manually might not call \beginslide. Let's just reset in \endslide for the next slide. Wait, the very first slide won't have them reset unless we initialize them to 0. They are 0 initially.
 \stepcount=0
 \openfragments=0
 
@@ -198,7 +345,7 @@
 \def\begincodeblock{%
     \par\vskip 15pt
     \setbox0=\vbox\bgroup
-        \bodycode 
+        \code 
         \parindent=0pt
         \leftskip=40pt  % Left padding for the text
         \rightskip=40pt % Right padding

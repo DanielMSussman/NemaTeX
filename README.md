@@ -9,11 +9,9 @@ This repo is my attempt to explore those questions. If you're interested, I'm al
 
 ## What's up with the name?
 
-I've always thought of this project as just "cpptex", but that name [was taken](https://github.com/syntheticpp/cpptex). I eventually landed on "NemaTeX." 
+I've always thought of this project as just "cpptex", but that name [was](https://github.com/mgatc/cpptex) [taken](https://github.com/syntheticpp/cpptex). I eventually landed on "NemaTeX." 
 
-Keeping a Greek prefix felt in keeping with the etymology of TeX. "Nema" means "thread", and (a) we all love our Knuthian weaving metaphors, (b) one goal of this project was to update the architecture to exploit parallel CPU threads, and (c) well... I've published very tangentially on nematic liquid crystals in my research career.
-
-Finally, in a happy linguistic accident, "nema" can be translated to "there is no" in several Slavic languages. A name for a TeX engine that suggests "there is no TeX" made me chuckle.
+Keeping a Greek prefix felt in keeping with the etymology of TeX. "Nema" means "thread", and (a) we all love our Knuthian weaving metaphors, (b) one goal of this project was to update the architecture to exploit parallel CPU threads, and (c) well... I've published very tangentially on nematic liquid crystals in my research career. And (d) in a happy linguistic accident, "nema" can be translated to "there is no" in several Slavic languages. A name for a TeX engine that suggests "there is no TeX" made me chuckle.
 
 ## Building the project
 
@@ -37,7 +35,7 @@ It's odd to say, but LaTeX is one of those things that makes my life better. I d
 
 And then I think about TeX itself. There's something humbling about knowing that one of your daily tools predates so much of the rest of your toolbox. Also humbling is how much it taught me about software engineering. For many people, the idea of data-driven design might have clicked when (e.g.) watching [Mike Acton's talk](https://www.youtube.com/watch?v=rX0ItVEVjHc). For me it was when I thought not only about TeX's famous memory word layout, but how the whole system feels like it is fundamentally about how the data *wants* to flow through a typesetting engine. It's a testament that the kinds of optimizations designed for a very different hardware environment -- terribly scarce memory, and with the relative time cost of compute operation and memory look-ups very different from today -- anticipated what is now the cutting edge of data-driven optimization.
 
-Of course... it's not all peaches and cream. I am, frankly, not smart enough to reason about how parts of the TeX code -- in Pascal or the macro-laden cweb translation -- actually work together. I find it too much to hold in my head at once. Certainly I would enjoy it if the code of TeX was written in a way more familiar to how I learned to write C++ -- not so much in the sense of object orientation, but in the sense of interfaces, abstractions, minimal global state, and without a spaghetti of macros interconnecting everything.
+Of course... it's not all peaches and cream. Sometimes TeX feels a bit like the Library of Babel: a finite set of rules that give rise to a universe of possibilities, the overwhelming majority of which I will not understand. I am, frankly, not smart enough to reason about how parts of the TeX code -- in Pascal or the macro-laden cweb translation -- actually work together. I find it too much to hold in my head at once. Certainly I would enjoy it if the code of TeX was written in a way more familiar to how I learned to write C++ -- not so much in the sense of object orientation, but in the sense of interfaces, abstractions, minimal global state, and without a spaghetti of macros interconnecting everything.
 
 There's a rough planning document in the `notes/` directory, but even a cursory inspection of the code itself will tell you that I'm kind of going through and updating the code in waves. Some functions will look very much like a direct translation of the original pascal code, and some will look like modern(ish) C++. I also wanted to advertise other people's work in the community. Of course engines like pdftex, xetex, and luatex make modern LaTeX possible, but many others have played around with the idea of writing TeX in a modern language, too. I'd like to particularly highlight projects like arusson's [tex-c](https://github.com/arusson/tex-c), Richard Sandberg's [rsTeX](https://github.com/nadder/rstex), and Tyge Tiessen's [rtex](https://github.com/tyti/rtex)). I learned a lot by looking at those codebases.
 

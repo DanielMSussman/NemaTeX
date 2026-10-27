@@ -6,12 +6,17 @@ file(TOUCH ${CMAKE_BINARY_DIR}/empty_input.txt)
 # Many of our tests are of the flavor "compare a generated file with a gold standard,
 # with a cmake script that defines allowed differences between them"
 function(compare_output_test TEST_NAME GENERATED_FILE GOLD_FILE SCRIPT_FILE REQUIRED_FIXTURE)
+    if(IS_ABSOLUTE "${SCRIPT_FILE}")
+        set(_RESOLVED_SCRIPT "${SCRIPT_FILE}")
+    else()
+        set(_RESOLVED_SCRIPT "${CMAKE_CURRENT_SOURCE_DIR}/${SCRIPT_FILE}")
+    endif()
     add_test(
         NAME ${TEST_NAME}
         COMMAND ${CMAKE_COMMAND}
         -DGENERATED_FILE=${NEMATEX_TEST_OUTPUT_DIR}/${GENERATED_FILE}
             -DGOLD_FILE=${CMAKE_CURRENT_SOURCE_DIR}/${GOLD_FILE}
-            -P ${CMAKE_CURRENT_SOURCE_DIR}/${SCRIPT_FILE}
+            -P ${_RESOLVED_SCRIPT}
     )
     set_tests_properties(${TEST_NAME} PROPERTIES 
         FIXTURES_REQUIRED ${REQUIRED_FIXTURE}
@@ -24,7 +29,7 @@ function(setup_test_fixture)
         PARSE_ARGV 0 ARG 
         "IGNORE_FAIL"
         "NAME;FIXTURE_NAME;OUT_FILE;INPUT_FILE;MOVE_SRC;MOVE_DST;MOVE_SRC2;MOVE_DST2"
-        "ARGS;REQUIRES;ENVIRONMENT"
+        "ARGS;REQUIRES;ENVIRONMENT;DEPENDS"
     )
     set(cmd_args
         -DEXE=$<TARGET_FILE:${PROJECT_NAME}>
@@ -63,7 +68,12 @@ function(setup_test_fixture)
     if(ARG_ENVIRONMENT)
         set_property(TEST ${ARG_NAME} APPEND PROPERTY ENVIRONMENT "${ARG_ENVIRONMENT}")
     endif()
+    if(ARG_DEPENDS)
+        set_property(TEST ${ARG_NAME} APPEND PROPERTY DEPENDS "${ARG_DEPENDS}")
+    endif()
 endfunction()
+
+include(${CMAKE_CURRENT_LIST_DIR}/HelperFunctions.cmake)
 
 find_package(Python3 COMPONENTS Interpreter REQUIRED) #for some dvi comparisons, and inspecting tagged pdfs
 find_program(DVITYPE_EXECUTABLE dvitype REQUIRED)
@@ -73,3 +83,8 @@ add_subdirectory(etextrip)
 add_subdirectory(pageir)
 add_subdirectory(tagging)
 add_subdirectory(l3primitives)
+add_subdirectory(checkpoint)
+add_subdirectory(newPrimitives)
+add_subdirectory(formula)
+add_subdirectory(unicode)
+

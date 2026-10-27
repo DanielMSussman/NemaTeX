@@ -97,7 +97,7 @@ With the state encapsulated, this milestone tackles the internal logic and struc
     - [x] State
     - [x] Hyphenation
 
-## Milestone 7: Architecture, cleaning, improvements, part 2
+## Milestone 7: Architecture, cleaning, improvements, part 2 -- Done
 
 ...Many of the above implementations are the basic version. There's lots of cleaning, refactoring, and improvement to work on. The goal is to carve nature at the joints; for now we've hacked at it with a spoon.
 
@@ -108,57 +108,33 @@ With the state encapsulated, this milestone tackles the internal logic and struc
     - [x] tex engine version / existence
     - [x] update timer to align with pdftex (for l3kernel)
 
-- [ ] continued state decoupling and class organization.
-    - [ ] compositor/galley/scanner/engine entanglements... pretty fundamental, but think about it 
+- [x] continued state decoupling and class organization.
     - [x] tokenReader -- ExpressionParser, MacroExpander, ValueScanner, ConditionalManager
-    - [ ] pagebuilder: split off a PageRenderer, InsertionManager, and a stateless vsplitter?
-    - [ ] font manager and font interface need to be refactored. Font stores, TeX-related font interfaces, and then a simpler manager. The kind of thing we can pass around with no reference to the engine (i.e., what the output routines want to have)
-    - [ ] executor: split off the hyphenation stuff, an ExtensionProcessor, an AssignmentProcessor, and something for group-closers / right-braces
+    - [x] font manager and font interface need to be refactored. Font stores, TeX-related font interfaces, and then a simpler manager. The kind of thing we can pass around with no reference to the engine (i.e., what the output routines want to have)
     - [x] LineBreaker 
         - [x] extract a KnuthPlass core that is independent of the engine state
-        - [ ] other composition candidates: LineAssembler (for post_line_break), HyphenationScanner for try_hyphenation_sequence, and a LineBreakTracer for the diagnostic dispatch_events stuff
-    - [ ] alignment: PreambleScanner (initialize_alignment and get_preamble_token), AlignmentRenderer (finalize_alignment), and possibly a TableTagManager. 
-        - [ ] just noticed that resume_after_display is here, instead of (perhaps?) near end_display_math?
-    - [ ] math list
-        - [ ] split candidates: a MathRenderer (AST->hlist), MathModeManager, and something to do with all of the MathParameters (depends on FontManager reorg)
-        - [ ] extract out the math AST noads from the main Memory?
+- [x] reorganize the cli so that we can actually use it, naturally, from outside of the build dir
 
-- [ ] all those node offsets... do we need them? should we reorganize scan_math?
-    
 ## Milestone 8: Architecture, cleaning, improvements, part 3 (deeper font stuff, etc)
 
-- [ ] Think about what luatex did... right now we are using a memory word in box nodes (etc) to hold a struct tree root... would could index (also? instead of?) into a side-table registry for nodes in general
+...getting better, but still lots of cleaning, refactoring, and improvement to work on. The goal is to carve nature at the joints; for now we've mangled it with a butter knife.
 
-- [ ] primitives for selecting otf font features (or disabling tex ligatures)
+- [x] Rework the diagnostic system, focusing on separating out concerns and removing the possibility of logging heisenbugs.
 
-- [ ] OTF Math 
-    - [ ]  when viewed in okular there seems to be pixel-level discrepancies in lining up the vinculum with the surd, which vanish when viewed at high-enough zoom...  might be a pdf-viewer-based issue, or it might be something I need to fix
-    - [ ] issues reported by mathsubsup children number in firefox on the math_tagging test
-    - [ ] extensible delimiter ordering... check pmatrix example in ua2gentle output. I thought I had already handled this correctly, and most delimiters look right. Something is fishy
-- [ ] math list -- extract out the math AST noads from the main Memory?
-    - [ ] math AST: small variant with side tables a la the pageIR
-        - [ ] freeing and error recovery -- walk once to tell the memory to clean nodes up if needed, then `.clear()`
-    - [ ] remove noads from the node organization and the texmemory class altogether
+- [x] Reorganize the TeXCore library -- split it up into subsystems so that the libraries fall into a real hierarchy instead of the current tangled mess
 
-- [ ] comment in OTF reconstituter header. 
-    - [ ] OTF reconstituter improvements
-    - [ ] carefully work through assumptions in the linebreaker (char nodes vs glyph nodes, etc) 
+- [x] OTF reconstituter improvements
+
+- [x] OTF Math 
+    - [x] finish implementation of equivalent of unicode-math; make otf math fonts the default
 
 - [ ] font selection scheme for text and math. See `notes/fonts.md` (and related to the above)
-
-- [ ] `src/common` sudirectory. Are we happy with the things that are in this space?
-    - [ ] constants
-    - [ ] geometry
-    - [ ] enums
-    - [ ] primitive types
-    - [ ] primitives
-    - [ ] structs
+    - [ ] primitives for selecting otf font features (or disabling tex ligatures)
 
 ## Milestone 9: macro storage and dynamic memory -- Done
 
 - [x] macros / immutable token sequences separate memory arrays / vectors? (`notes/tokenStore.md`)
-- [x] system for ephemeral macros (i.e., token store handles only truly immutable things, making it more like the string pool)
-
+- [x] system for ephemeral macros 
 
 ## Milestone 10: e-TeX and LaTeX
 
@@ -166,27 +142,21 @@ With the state encapsulated, this milestone tackles the internal logic and struc
 - [x] things required for the l3 kernel (`notes/l3kernel.md`)
     - [x] implemented primitives and passing tests
     - [x] [rename](https://chat.stackexchange.com/transcript/message/69172815#69172815) pdftex primitives prefixed with `pdf` to the xetex/hitex/prote equivalent. For instance, [here](https://github.com/TeX-Live/texlive-source/blob/trunk/texk/web2c/hitexdir/hitex.w#L27168) 
-
-- [ ] audit engine constants
-    - [x] reimplement hash table (current fingerprinting limits cs capacity to 16387)
-    - [x] hyphenation limits
-    - [x] Put the string pool on the heap as a vector
-    - [x] fix the limited `max_halfword` kludge
-    - [ ] other constants
+- [ ] latex test suite
+    - [ ] support relevant cli options that l3build expects
+    - [ ] tests
+- [ ] tagging polish
 
 - [x] compile anything with latex and a package
 - [ ] compile with base packages... see `notes/latex.md`
-    - [ ] graphics vs graphicx
-    - [ ] color / xcolor
-- [ ] latex test suite?
 
 - [x] made some helpers in scanner_raii_guards, etc; could be reused elsewhere? 
 
 - [ ] various monkeying around with latex cfg files, etc... audit the `assets/latex` directory, think hard about this, etc.
 
-## Milestone 11: error messages
+## Milestone 11: ~~error~~help messages
 
-- [ ] finish the reorganization so that all warnings and errors use the `reporter->emit(...)` framework
+- [x] finish the reorganization so that all warnings and errors use the `reporter->emit(...)` framework
 - [x] allow swapping the tex error reporter with a different one (`notes/errors.md`)
     - [x] proof of principle implementation with clang-inspired diagnostics for 3-4 types of errors
 - [ ] expressive errors for all messages (?)
@@ -218,11 +188,53 @@ In addition to fixed-layout, we should have semantic html (reflowable text, math
 
 - [ ] this would be an excellent time to actually set up our tagging tests both for html and pdf. A few sample files are in the `test/tagging` directory to think about.
 
-## Milestone 14: Parallel execution macros
+# Milestone 14: the junk drawer
+
+Naturally, as the engine evolves, I want the ability to shuffle some tasks or ideas to a later time... "15" feels like a giid round number for this purpose.
+
+- [ ] system for pdf metadata
+
+- [ ] native handling of pdf embedding
+
+- [ ] `src/common` sudirectory. Are we happy with the things that are in this space?
+    - [ ] constants
+    - [ ] geometry
+    - [ ] enums
+    - [ ] primitive types
+    - [ ] primitives
+    - [ ] structs
+
+- [ ] all those node offsets... do we need them? should we reorganize scan_math?
+
+- [ ] continued state decoupling and class organization.
+    - [x] compositor/galley/scanner/engine entanglements... pretty fundamental, but think about it 
+    - [x] pagebuilder 
+    - [ ] executor: split off the hyphenation stuff, an ExtensionProcessor, an AssignmentProcessor, and something for group-closers / right-braces
+    - [x] alignment: 
+    - [ ] math list
+        - [ ] split candidates: a MathRenderer (AST->hlist), MathModeManager, and something to do with all of the MathParameters (depends on FontManager reorg)
+        - [ ] extract out the math AST noads from the main Memory?
+    - [x] continue transitioning to tex_memory iterators as appropriate
+
+
+- [ ] Think about what luatex did... right now we are using a memory word in box nodes (etc) to hold a struct tree root... would could index (also? instead of?) into a side-table registry for nodes in general. 
+    - [ ] somewhat related: synctex info
+
+- [ ] tagging correctness: verapdf has worked for a while, but check screen reading, show-pdf-tags, and more
+    - [ ] issues reported by mathsubsup children number in firefox on the math_tagging test
+
+- [ ] audit engine constants
+    - [x] reimplement hash table (current fingerprinting limits cs capacity to 16387)
+    - [x] hyphenation limits
+    - [x] Put the string pool on the heap as a vector
+    - [x] fix the limited `max_halfword` kludge
+    - [ ] other constants
+
+## Milestone 15: Parallel execution macros
 
 Goal: introduce engine-level primitives to allow safe, concurrent macro expansion and layout without corrupting TeX's heavily mutated global state. Don't worry: I appreciate that this is ridiculous.
 
-- [ ] Implement Copy-On-Write (COW) `eqtb`?: One possible idea is to think about the paged array structure of the eqtb, but as shared pointers? This would give read-only snapshots for background threads, while the main thread only has to copy pages it mutates.
+- [ ] Implement Copy-On-Write `eqtb`?: One possible idea is to think about the paged array structure of the eqtb, but as shared pointers? This would give read-only snapshots for background threads, while the main thread only has to copy pages it mutates.
 - [ ] thread-local memory arenas: Needs something for the background threads so they can run `get_node`/`free_node` without locking the global `mem` array. Bump allocators?
 - [ ] Isolate string pools and scanners: Ensure background threads have independent input contexts so they don't advance the main file pointer, and string buffers that only merge to the global pool upon completion.
 - [ ] primary primitives
@@ -230,13 +242,14 @@ Goal: introduce engine-level primitives to allow safe, concurrent macro expansio
     - [ ] `\asyncbox`: A promise-based primitive (e.g., `\setbox0=\asyncbox{...}`). Dispatches layout work to a background thread and merges its node arena into the global pool on completion (?). The main thread only blocks if it attempts to access the box before the promise resolves.
     - [ ] `\spawnengine`: A clean, completely isolated sub-engine primitive to natively parallelize heavy standalone tasks (like `TikZ` graphics or independent chapters) without the overhead of OS-level process spawning. Have to think hard and refine what exactly the output of an "engine" is... what IR, what internal state should be transmitted, what final output, etc.
 
-# Milestone 15: Smoother self-cycling
-
-- [ ] engine self-signalling: to help with multipass compilation, give the engine a way to detect that it needs to run again, and optionally let this signal restart an outer loop from the main exexcutable.
-
-# Milestone 16: unicode input
+# Milestone 16: unicode input -- Done
 
 Currently, the `input_character_map` just enforces 7 (7!)-bit input (but our nodes are arranged to have room for 21 bits). We should build out an actual unicode scanner that can hand the engine codepoints, and then start confronting all of the times that the number `256` is used in the codebase
+
+- [x] unify char nodes and glyph nodes
+- [x] input scanner
+    - [x] fold in, e.g., uni-algo
+- [x] hyphenation / reconstitution
 
 # Milestone 17: dynamic and separated memory -- Done
 
@@ -253,17 +266,28 @@ Perhaps in keeping with the "where is the boundary between the engine and macro 
     - [x] idea: if we are about to dump the latex format and if we detect that expl3 is active, monkey with the setup and redirect to the appropriate engine-level routine. 
     - [ ] current best idea for a name for monkey-patching macros: macaque-ro patching. Come up with either a better or a worse pun.
 - [ ] ... keyval (l3keys? keyval.sty? xkeyval?) ? geometry? graphicx? etc? Where is the boundary? Some things are just about computation and data manipulation in the scanner; some reach into the pageIR, etc.
+- [x] floating point math evaluator
+    - [ ] switch to base-10 ieee to align with fp_eval?
 
+# Milestone 19: first strict-mode feature (auto-fmt) -- Done
+
+- [x] auto-format generation... 
+    * the idea would be something like `nematex --auto-checkpoint main.tex` checks for a `main.nema.fmt` file. If missing (or see below), parse main.tex, record dependencies, hit a `\checkpointformat`, dump the format with a manifest, and continue typesetting. If not missing, memory-map `main.tex`, find the checkpoint, tally up newlines (for error reporting), loads the fmt file, and points the scanner at the byte after the checkpoint. For dependencies, need to keep track of a manifest of every file opened and their hashes (for input) or names (for output). On load, read the manifest from the fmt file, check if the hashes are the same, and if any file has change just invalidate the cache of files.
+    * need some rules, like "using this means the checkpoint primitive must be in main", etc
+
+# Milestone 20: microtypography
+
+margin stuff should be straightforward... hz I have to think about.
+
+# Milestone 21: incremental compilation
+
+Of course... everyone is thinking about this. Probably a lot follows naturally from the right architecture for parallelization, so wait until after milestone 14
 
 # Milestone X:  unsorted ideas (i.e., the staging ground for future milestones)
 
 - [ ] audit third party dependencies... we typically leaned toward picking the easiest to integrate, not (necessarily) the ideal choice. Examples:
-    - [ ]  miniz vs libdeflate?
-    - [ ] tsl::robin-map? 
-
-- [ ] auto-format generation...
-    * the idea would be something like `nematex --auto-checkpoint main.tex` checks for a `main.nema.fmt` file. If missing (or see below), parse main.tex, record dependencies, hit a `\checkpointformat`, dump the format with a manifest, and continue typesetting. If not missing, memory-map `main.tex`, find the checkpoint, tally up newlines (for error reporting), loads the fmt file, and points the scanner at the byte after the checkpoint. For dependencies, need to keep track of a manifest of every file opened and their hashes (for input) or names (for output). On load, read the manifest from the fmt file, check if the hashes are the same, and if any file has change just invalidate the cache of files.
-    * need some rules, like "using this means the checkpoint primitive must be in main", etc
+    - [x] miniz --> libdeflate
+    - [ ] tsl::robin-map --> ?
 
 - [ ] Revisit pageIR. 
     - [ ] Drawing operations?
@@ -274,6 +298,8 @@ Perhaps in keeping with the "where is the boundary between the engine and macro 
 - [ ] IR of enough state and memory before linebreaking?
 
 - [ ] citations (eplain? something else?)
+
+- [ ] engine self-signalling: to help with multipass compilation, give the engine a way to detect that it needs to run again, and optionally let this signal restart an outer loop from the main executable.
 
 - [ ] anything still in the notes directory
 

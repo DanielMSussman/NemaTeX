@@ -1,0 +1,43 @@
+% test for Unicode hyphenation and OTF word reconstitution... we're using Polish because
+% it was the first entry in the language.dat file with genuinely non-ascii unicode characters.
+\catcode`\{=1 \catcode`\}=2 \catcode`\#=6
+\def\typ#1{\immediate\write-1 {#1}}
+
+\typ{START: Unicode Hyphenation Test}
+
+% by-hand... define some hyphenation exceptions with non-ASCII unicode
+\hyphenation{
+  książ-ka
+  prze-pra-sza-my
+  Rzecz-po-spo-li-ta
+  do-świad-cze-nie
+  nie-pod-le-głość
+}
+
+\lefthyphenmin=2
+\righthyphenmin=2
+
+\typ{Testing \string\showhyphens:}
+\showhyphens{książka przepraszamy Rzeczpospolita doświadczenie niepodległość chrząszcz}
+
+% standard trick: use narrow columns to force linebreaks
+\typ{Testing paragraph line breaking:}
+\setbox0=\vbox{
+  \hsize=2.5cm
+  \pretolerance=-1
+  \tolerance=3000
+  \hfuzz=10pt
+  \noindent
+  książka
+  przepraszamy
+  Rzeczpospolita
+  doświadczenie
+  niepodległość
+  chrząszcz
+}
+
+\noindent
+\unvbox0
+
+\typ{END: Unicode Hyphenation Test}
+\bye

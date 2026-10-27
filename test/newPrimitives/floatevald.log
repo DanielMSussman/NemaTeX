@@ -1,0 +1,50 @@
+START
+FLOATEVALD TEST 1: existence
+> \floatevald=\floatevald.
+l.8 \show\floatevald
+                    
+
+FLOATEVALD TEST 2: degree trigonometry
+0
+1
+0
+1
+0.5000000000000001
+0
+0.9999999999999999
+FLOATEVALD TEST 3: inverse trigonometry in degrees
+90
+60.00000000000001
+45
+45
+FLOATEVALD TEST 4: reciprocal trigonometry in degrees
+1.9999999999999996
+2.0000000000000004
+1.0000000000000002
+FLOATEVALD TEST 5: unified angle matrix in degree mode
+1
+0
+0
+180
+FLOATEVALD TEST 6: vector and coordinate math
+50
+5
+FLOATEVALD TEST 7: angle normalization via Mod vs mod
+330
+30
+-30
+FLOATEVALD TEST 8: PGF functional operators and math helpers
+3
+0.75
+5
+6
+120
+0.25
+3.14
+FLOATEVALD TEST 9: PGF array operations
+20
+20
+3
+FLOATEVALD TEST 10: dimension arithmetic and assignment
+29.0pt
+END

@@ -350,6 +350,16 @@
 \def\oldstyle{\fam\@ne}
 \def\cal{\fam\tw@}
 
+\def\mathbf#1{{\fam 4 #1}}
+\def\mathsf#1{{\fam 5 #1}}
+\def\mathtt#1{{\fam 6 #1}}
+\def\mathit#1{{\fam 7 #1}}
+\def\mathcal#1{{\fam 8 #1}}
+\def\mathfrak#1{{\fam 9 #1}}
+\def\mathbb#1{{\fam 10 #1}}
+\def\mathbfit#1{{\fam 11 #1}}
+\def\mathrm#1{{\fam 12 #1}}
+
 \newfam\itfam \def\it{\fam\itfam\tenit}
 \textfont\itfam=\tenit
 \newfam\slfam \def\sl{\fam\slfam\tensl}
@@ -668,7 +678,7 @@
 \def\>{\mskip\medmuskip}
 \def\;{\mskip\thickmuskip}
 \def\!{\mskip-\thinmuskip}
-\def\*{\discretionary{\thinspace\the\textfont2\char2}{}{}}
+\def\*{\discretionary{\thinspace\ast}{}{}}
 {\catcode`\'=\active \gdef'{^\bgroup\prim@s}}
 \def\prim@s{\prime\futurelet\next\pr@m@s}
 \def\pr@m@s{\ifx'\next\let\nxt\pr@@@s \else\ifx^\next\let\nxt\pr@@@t

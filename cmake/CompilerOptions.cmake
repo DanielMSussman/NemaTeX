@@ -1,37 +1,60 @@
-if(NOT CMAKE_BUILD_TYPE MATCHES "^(Debug|Coverage)$")
-    add_compile_options(
+# I'm slowly learning about modern cmake... here's the interface library for all compiler
+#flags, definitions, and link options for nematex targets
+add_library(nematex_compile_options INTERFACE)
+
+# require C++23 standard for any target linking this interface
+target_compile_features(nematex_compile_options INTERFACE cxx_std_23)
+
+target_include_directories(nematex_compile_options INTERFACE
+    ${CMAKE_SOURCE_DIR}/extern
+)
+
+target_compile_definitions(nematex_compile_options INTERFACE
+    _REENTRANT
+    $<$<BOOL:${ENABLE_MACRO_PROFILER}>:NEMATEX_PROFILE_MACROS>
+)
+
+
+target_compile_options(nematex_compile_options INTERFACE
+    $<$<COMPILE_LANGUAGE:CXX>:
+        -Wall
+        -Wextra
+        -Wshadow
+        -Wpedantic
+        -Wnon-virtual-dtor
+        -Woverloaded-virtual
+    >
+    # release / default 
+    $<$<NOT:$<CONFIG:Debug,Coverage>>:
         -O3
         -march=native
         -g
         -ffunction-sections
         -fdata-sections
-    )
-endif()
-
-if(CMAKE_BUILD_TYPE MATCHES Debug)
-    add_compile_options(
+        -fno-exceptions
+        -fno-rtti
+    >
+    $<$<CONFIG:Debug>:
         -g
         -fno-omit-frame-pointer
         -fsanitize=address
-    )
-    add_link_options(-fsanitize=address)
-endif()
-
-if(CMAKE_BUILD_TYPE MATCHES Coverage)
-    add_compile_options(
+    >
+    $<$<CONFIG:Coverage>:
         -g
         -O0
         --coverage
-    )
-    add_link_options(--coverage)
-endif()
-
-add_compile_options(
-    -Wall
-    -Wextra
-    -Wshadow 
-    -Wpedantic
-    # -Wconversion # turn this on for a laugh sometime
-    -Wnon-virtual-dtor
-    -Woverloaded-virtual
+    >
 )
+
+target_link_options(nematex_compile_options INTERFACE
+    $<$<CONFIG:Debug>:
+        -fsanitize=address
+    >
+    $<$<CONFIG:Coverage>:
+        --coverage
+    >
+    $<$<NOT:$<CONFIG:Debug,Coverage>>:
+        -Wl,--gc-sections
+    >
+)
+

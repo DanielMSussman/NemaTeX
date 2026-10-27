@@ -8,9 +8,25 @@ Think of this as a Chaos Muppet approach to versioning in the 0.X phase, when th
 
 I'm sorry if my obvious disregard for version parsers is upsetting. We should come up with a name for this scheme... strings of digits get eaten, but it's not really Ouroboros. Perhaps the Lernaean Hydra Scheme? Or Zeno's release candidate? I should probably add a milestone for "think of a good name."
 
-# Current string: 0.7.8.10.11.13.14.15.16.18.[10]
+# Current efforts:
 
-# 0.7.8.10.11.13.14.15.16.18.[10]
+# 0.8.10.11.13.14.15.18.20.21.[13]
+
+* unicode input in the scanner
+* finished migrating the engine to use the `reporter->emit(...)` subsystem for all diagnostics
+* Native opentype math
+
+# 0.8.10.11.13.14.15.16.18.20.21.[12]
+
+* reorganization of substantial amounts of architecture (see `notes/README.md`, milestone 7)
+* replaced recursive directory scanning with a semi-reasonable system (local and texlive caches)
+
+# 0.7.8.10.11.13.14.15.16.18.20.[11]
+
+* First "strict mode" feature -- auto-format generation.
+* Various performance optimizations, especially with respect to format file loading.
+
+# 0.7.8.10.11.13.14.15.16.18.19.20.[10]
 
 * Built a `TokenStore` for immutable token sequences. The memory-based approach was faster to write and slower to read; the TokenStore allows us to make the opposite tradeoff. For LaTeX, that other tradeoff is (unambiguously?) better.
 * finished implementing e-tex extensions -- etex trip test passes
@@ -68,4 +84,4 @@ Cmake build, and `ctest` to run the TeX82 trip test
 
 # 0.0.1.2.3.4.5
 
-It begins.
+Hwæt!

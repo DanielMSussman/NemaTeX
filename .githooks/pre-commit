@@ -1,4 +1,4 @@
 #!/bin/sh
-git-clang-format --style=file --staged
-
-git diff --name-only --cached | xargs -r git add
+# git-clang-format --style=file --staged
+#
+# git diff --name-only --cached --diff-filter=d -z | xargs -0 -r git add

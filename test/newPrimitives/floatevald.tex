@@ -1,0 +1,66 @@
+\nonstopmode
+\catcode`\{=1 \catcode`\}=2 \catcode`\#=6
+\def\typ#1{\immediate\write-1 {#1}}
+
+\typ{START}
+
+\typ{FLOATEVALD TEST 1: existence}
+\show\floatevald
+
+\typ{FLOATEVALD TEST 2: degree trigonometry}
+\typ{\floatevald{sin(0)}}
+\typ{\floatevald{sin(90)}}
+\typ{\floatevald{sin(180)}}
+\typ{\floatevald{cos(0)}}
+\typ{\floatevald{cos(60)}}
+\typ{\floatevald{cos(90)}}
+\typ{\floatevald{tan(45)}}
+
+\typ{FLOATEVALD TEST 3: inverse trigonometry in degrees}
+\typ{\floatevald{asin(1.0)}}
+\typ{\floatevald{acos(0.5)}}
+\typ{\floatevald{atan(1.0)}}
+\typ{\floatevald{atan2(1, 1)}}
+
+\typ{FLOATEVALD TEST 4: reciprocal trigonometry in degrees}
+\typ{\floatevald{sec(60)}}
+\typ{\floatevald{cosec(30)}}
+\typ{\floatevald{cot(45)}}
+
+\typ{FLOATEVALD TEST 5: unified angle matrix in degree mode}
+\typ{\floatevald{sin(90deg)}}
+\typ{\floatevald{sin(pi rad)}}
+\typ{\floatevald{sin(pi r)}}
+\typ{\floatevald{radians(180)}}
+
+\typ{FLOATEVALD TEST 6: vector and coordinate math}
+\dimen0=30pt
+\dimen1=40pt
+\typ{\floatevald{veclen(\dimen0, \dimen1)}}
+\typ{\floatevald{veclen(3, 4)}}
+
+\typ{FLOATEVALD TEST 7: angle normalization via Mod vs mod}
+\typ{\floatevald{Mod(-30, 360)}}
+\typ{\floatevald{Mod(750, 360)}}
+\typ{\floatevald{mod(-30, 360)}}
+
+\typ{FLOATEVALD TEST 8: PGF functional operators and math helpers}
+\typ{\floatevald{div(7, 2)}}
+\typ{\floatevald{frac(3.75)}}
+\typ{\floatevald{neg(-5)}}
+\typ{\floatevald{subtract(10, 4)}}
+\typ{\floatevald{factorial(5)}}
+\typ{\floatevald{reciprocal(4)}}
+\typ{\floatevald{round(3.14159, 2)}}
+
+\typ{FLOATEVALD TEST 9: PGF array operations}
+\typ{\floatevald{array({10, 20, 30}, 1)}}
+\typ{\floatevald{{10, 20, 30}[1]}}
+\typ{\floatevald{dim({10, 20, 30})}}
+
+\typ{FLOATEVALD TEST 10: dimension arithmetic and assignment}
+\dimen2=\floatevald{2 * 14.5}pt
+\typ{\the\dimen2}
+
+\typ{END}
+\end

@@ -1,4 +1,4 @@
-# these tests generate and compare pageIR from the plain and ua2plain versions of the gentle/ua2gentle.tex files
+# these tests generate and compare pageIR from a few tests... 
 setup_test_fixture(
     NAME Setup_GentlePhase3
     FIXTURE_NAME GentlePhase3Files

@@ -11,3 +11,6 @@ compile_commands.json
 
 #editors
 *.swp
+
+# test gold logs
+!test/**/*.log

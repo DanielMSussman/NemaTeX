@@ -1,7 +1,8 @@
 setup_test_fixture(
     NAME Setup_ETripPhase1
     FIXTURE_NAME ETripPhase1Files
-    ARGS "*\\input;trip"
+    DEPENDS TripPhase2_dvi
+    ARGS "--ini;*\\input;trip"
     OUT_FILE ${NEMATEX_TEST_OUTPUT_DIR}/redirect_etrip_output.txt
     MOVE_SRC trip.log
     MOVE_DST ${NEMATEX_TEST_OUTPUT_DIR}/etrip_phase1.log
@@ -23,7 +24,7 @@ setup_test_fixture(
     NAME Setup_ETripPhase3
     FIXTURE_NAME ETripPhase3Files
     REQUIRES ETripPhase2Files
-    ARGS "*etrip"
+    ARGS "--ini;*etrip"
     OUT_FILE ${NEMATEX_TEST_OUTPUT_DIR}/redirect_etrip_phase3_output.txt
     MOVE_SRC etrip.log
     MOVE_DST ${NEMATEX_TEST_OUTPUT_DIR}/etrip_phase3.log

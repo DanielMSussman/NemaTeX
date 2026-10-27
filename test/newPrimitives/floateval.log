@@ -1,0 +1,107 @@
+START
+FLOATEVAL TEST 1: existence
+> \floateval=\floateval.
+l.8 \show\floateval
+                   
+
+FLOATEVAL TEST 2: arithmetic precedence
+14
+20
+9
+16
+4
+FLOATEVAL TEST 3: implicit multiplication and negation
+14
+21
+-1
+-6
+1
+1
+1
+1
+1.5
+1
+1
+FLOATEVAL TEST 4: registers, dimensions, glue, and boxes
+12.5
+50
+14
+1
+FLOATEVAL TEST 5: modulo
+1
+1
+-1
+3
+1
+FLOATEVAL TEST 6: radian trigonometry and units
+0
+1
+1
+1
+0
+0
+1
+1.0000000000000002
+FLOATEVAL TEST 7: vector and scalar geometry
+5
+28.45274
+FLOATEVAL TEST 8: bitwise operations
+1
+7
+6
+-1
+-1
+16
+4
+FLOATEVAL TEST 9: number theory and relations
+14
+1
+0
+1
+0
+4
+1
+1
+1
+1
+1
+1
+0
+FLOATEVAL TEST 10: base conversion
+101
+77
+ff
+FF
+FLOATEVAL TEST 11: arrays
+3
+30
+42
+3
+2
+FLOATEVAL TEST 12: physical units
+72.27
+10
+1
+FLOATEVAL TEST 13: strings
+1
+hahaha
+FLOATEVAL TEST 14: short circuit and macro expansion
+42
+1
+0
+11
+FLOATEVAL TEST 15: full expandable edef
+1024
+FLOATEVAL TEST 16: division by zero error handling
+! Division by zero.
+<write> \floateval {1 / 0}
+                          
+<inserted text> 
+                }\endwrite 
+\typ ...immediate \write -1 {#1}
+                                
+l.120 \typ{\floateval{1 / 0}}
+                             
+
+0
+END

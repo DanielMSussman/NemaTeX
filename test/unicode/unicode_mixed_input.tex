@@ -1,0 +1,84 @@
+% Test for mixed ASCII, Unicode UTF-8, and four-/six-caret input using ua2plain format.
+\catcode`\{=1 \catcode`\}=2 \catcode`\#=6
+\def\typ#1{\immediate\write-1 {#1}}
+
+\typ{START}
+
+\def\asciitest{ASCII-Success}
+\typ{ASCII: \asciitest}
+
+\def\greeting{Bonjour le monde}
+\def\α{Alpha-UTF8}
+\def\résumé{Resume-UTF8}
+\typ{Unicode text: café, naïve, résumé}
+\typ{Unicode macro alpha: \α}
+\typ{Unicode macro resume: \résumé}
+
+\def\^^^^03b2{Beta-Caret}
+\typ{Caret text: ^^^^00e9, ^^^^00ef, ^^^^03b1, ^^^^03b2}
+\typ{Caret macro beta called via caret: \^^^^03b2}
+\typ{Caret macro beta called via UTF-8: \β}
+
+\def\^^^^^^01f600{Grin-SixCaret}
+\typ{Six-caret text: ^^^^^^0000e9, ^^^^^^0003b3, ^^^^^^01f600}
+\typ{Six-caret macro grin called via caret: \^^^^^^01f600}
+\typ{Six-caret macro grin called via UTF-8: \😀}
+
+\def\γ{Gamma-Mixed}
+\typ{UTF-8 macro gamma called via four-caret: \^^^^03b3}
+\typ{UTF-8 macro gamma called via six-caret: \^^^^^^0003b3}
+\def\🐳{Whale-UTF8}
+\typ{UTF-8 macro whale called via six-caret: \^^^^^^01f433}
+
+\ifx\α\^^^^03b1
+  \typ{PASS: control sequence \string\α matches \string\^^^^03b1}
+\else
+  \typ{FAIL: control sequence \string\α does not match \string\^^^^03b1}
+\fi
+
+\ifx\😀\^^^^^^01f600
+  \typ{PASS: control sequence \string\😀 matches \string\^^^^^^01f600}
+\else
+  \typ{FAIL: control sequence \string\😀 does not match \string\^^^^^^01f600}
+\fi
+
+\ifnum\strcmp{α}{^^^^03b1}=0
+  \typ{PASS: strcmp 'α' matches '^^^^03b1'}
+\else
+  \typ{FAIL: strcmp 'α' mismatch}
+\fi
+
+\ifnum\strcmp{^^^^03b3}{^^^^^^0003b3}=0
+  \typ{PASS: strcmp '^^^^03b3' matches '^^^^^^0003b3'}
+\else
+  \typ{FAIL: strcmp '^^^^03b3' mismatch}
+\fi
+
+\ifnum\strcmp{😀}{^^^^^^01f600}=0
+  \typ{PASS: strcmp '😀' matches '^^^^^^01f600'}
+\else
+  \typ{FAIL: strcmp '😀' mismatch}
+\fi
+
+\ifnum\strcmp{café}{caf^^^^^^0000e9}=0
+  \typ{PASS: strcmp 'café' matches 'caf^^^^^^0000e9'}
+\else
+  \typ{FAIL: strcmp 'café' mismatch}
+\fi
+
+\ifnum\strcmp{naïve}{na^^^^00efve}=0
+  \typ{PASS: strcmp 'naïve' matches 'na^^^^00efve'}
+\else
+  \typ{FAIL: strcmp 'naïve' mismatch}
+\fi
+
+\noindent
+Testing typesetting in font \string\tenrm:
+Hello world with punctuation!
+Unicode UTF-8 characters: café, résumé, α, β, γ.
+Four-caret notation codepoints: ^^^^00e9, ^^^^00ef, ^^^^03b1, ^^^^03b2, ^^^^03b3.
+Six-caret notation codepoints: ^^^^^^0000e9, ^^^^^^0003b1, ^^^^^^0003b2, ^^^^^^0003b3.
+
+\typ{END}
+\bye
+

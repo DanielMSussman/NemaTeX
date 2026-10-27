@@ -4,40 +4,11 @@ At the moment, when we compile the LaTeX format (via `./nematex latex.ltx`), we 
 
 Because our file resolver searches the local `assets/` directories before falling back to system TeX Live paths, this directory acts as a priority override. Files placed here intercept package loading to ensure LaTeX uses NemaTeX's native primitives (`\pushcolor`,`\restorestate`, `\setmatrix`, `\loadasset`, `\drawasset`, etc) rather than crashing or invoking unsupported driver specials.
 
-Some files here are exact, unmodified copies of their TeX Live distribution counterparts... I'm doing this because I haven't yet written fast file searching into the engine, so discovering files in these small directories is much faster than recursively searching all of texlive. Other files actual contain important compatibility modifications.
-
-## Verbatim copies from tex live
-
-The following files are identical to their counterparts in the TeX Live distribution:
-
-* `article.cls` — Standard LaTeX `article` document class.
-* `epstopdf-sys.cfg` — System configuration stub for `epstopdf`.
-* `geometry.sty` — Page geometry configuration package.
-* `graphics.sty` — Standard LaTeX graphics package.
-* `graphicx.sty` — Extended graphics package (`\includegraphics` key-value syntax).
-* `ifetex.sty` — e-TeX engine detection stub.
-* `ifluatex.sty` — LuaTeX engine detection stub.
-* `ifpdf.sty` — PDF mode detection stub.
-* `iftex.sty` — Engine identification package.
-* `ifvtex.sty` — VTeX engine detection stub.
-* `ifxetex.sty` — XeTeX engine detection stub.
-* `keyval.sty` — Key-value option parser.
-* `size10.clo` — Standard 10pt document size declarations.
-* `supp-pdf.mkii` — ConTeXt MPS-to-PDF graphics converter.
-* `trig.sty` — Trigonometric function evaluator for graphics rotations.
-* `unicode-math-table.tex` — Unicode math symbol and operator definitions.
-
 ## Modified and custom files
 
 ### `preload.cfg`
 
-This file was copied from `/usr/share/texlive/texmf-dist/tex/latex/base/preload.cfg`, but modified to add legacy dimension aliases (so that I don't have to duplicate the primitives):
-  ```latex
-  \ifx\pdfpagewidth\@undefined
-    \let\pdfpagewidth\pagewidth
-    \let\pdfpageheight\pageheight
-  \fi
-  ```
+This file was copied from `/usr/share/texlive/texmf-dist/tex/latex/base/preload.cfg`, but modified to add legacy dimension aliases (so that I don't have to duplicate the primitives) and an automatic canvas synchronization hook for document classes:
 
 ### `color.cfg`
 
@@ -53,7 +24,8 @@ This file was copied from `/usr/share/texlive/texmf-dist/tex/latex/graphics-cfg/
 This file was copied from `/usr/share/texlive/texmf-dist/tex/latex/graphics-def/xetex.def`, but modified in a few ways.
 
   1. Replaced the dvipdfmx specials (`\special{color push ...}` and `\special{color pop}`) with an expl3 parser (`\nematex@setcolor`) that inspects `\current@color` (supporting `rgb`, `gray`, `cmyk`, and `xcolor` expressions) and dispatches directly to NemaTeX's native `\pushcolor R G B A` and `\popcolor` primitives.
-  2. Sanitized the `\AtBeginDocument` page-sizing hook to refer to `\pagewidth` and `\pageheight`... I guess I could just make use of the preload.cfg to do this, but I edited this file first and haven't cleaned things up
+  2. Changed the `\AtBeginDocument` page-sizing hook to refer to `\pagewidth` and `\pageheight`... I guess I could just make use of the preload.cfg to do this, but I edited this file first and haven't cleaned things up
+  3. Replaced unsupported `\XeTeXpicfile` / `\XeTeXpdffile` calls and `\special{pdf:image}` in `\Gread@bmp`, `\Gread@pdf`, and `\Ginclude@nematex` with NemaTeX's native `\loadasset` / `\drawasset` / `\lastasset` primitives.
 
 ### `l3backend-xetex.def`
 
@@ -72,7 +44,7 @@ This file was copied from `/usr/share/texlive/texmf-dist/tex/latex/graphics-cfg/
 
 ### `pdftex.def`
 
-This file was copied from `/usr/share/texlive/texmf-dist/tex/latex/graphics-def/pdftex.def`. I patched image reading to use nematex's primitives (`\loadasset`, `\drawasset`, `\lastasset`), updated matrix state transformations to `\savestate` / `\restorestate` / `\setmatrix`, and mapped page dimensions to `\pagewidth` and `\pageheight`.
+This file was copied from `/usr/share/texlive/texmf-dist/tex/latex/graphics-def/pdftex.def`. I patched image reading to use nematex's primitives (`\loadasset`, `\drawasset`, `\lastasset`), updated matrix state transformations to `\savestate` / `\restorestate` / `\setmatrix`, mapped page dimensions to `\pagewidth` and `\pageheight`, and guarded color hooks against undefined `\pdfcolorstack`.
 
 ### `geometry.cfg`
 
@@ -84,15 +56,19 @@ Copied from `/usr/share/texlive/texmf-dist/tex/latex/epstopdf-pkg/epstopdf-base.
 
 ### `fontmath.cfg`
 
-Copied from `/usr/share/texlive/texmf-dist/tex/latex/base/fontmath.cfg`, modified to pre-extract standard mathematical NFSS font declarations (`fontmath.ltx`) so math fonts load directly without needing external configuration files during format building.
+Configures native OpenType math using Latin Modern Math (`latinmodern-math.otf`). Pre-declares mathematical font encodings (`TU`, `OML`, `OMS`, `OMX`, `U`), registers NFSS math alphabet hooks (`\mathbf`, `\mathbb`, etc.) so packages like `bbold` can safely redeclare them, releases conflicting package commands (`\iint`, `\ulcorner`) while providing `\AtBeginDocument` fallbacks for default documents, defines standard LaTeX math aliases (`\mathellipsis`, `\to`, `\triangle`, `\circ`, `\bullet`, `\diamond`, etc.), and defines `\newcounteralias` for modern `amsthm` hook compatibility.
+
+### `hyperref.sty`
+
+A lightweight compatibility stub that intercepts `\usepackage{hyperref}` and forwards to `nohyperref.sty`, preventing unsupported driver specials (`hxetex.def`) and engine dimension checks from failing while providing standard dummy hyperref commands.
 
 ### `language.dat`
 
 Copied from `/usr/share/texlive/texmf-dist/tex/generic/config/language.dat`, but stripped down to only load US hyphenation patterns... this is just a convenience to slim down the format file (which, in turn, shaves off a few milliseconds). Eventually: support lazy loading of hyph patterns from the fmt file, so that we can include the whole thing in the fmt file but only pay for what we use.
 
-### `tulmr.fd`
+### `tulmr.fd`, `tulmss.fd`, `tulmtt.fd`, `tulmvtt.fd`, `tulmssq.fd`
 
-This file was copied from `/usr/share/texlive/texmf-dist/tex/latex/base/tulmr.fd`. We are pretending to be xetex, but don't load fonts in the same way, so this maps font declarations directly to the latin modern opentype font suite.
+These files define the Latin Modern font families (`lmr`, `lmss`, `lmtt`, `lmvtt`, `lmssq`) under the `TU` encoding. We are pretending to be XeTeX, but NemaTeX expects direct font file paths ending in `.otf` rather than XeTeX's `\UnicodeFontFile` brackets syntax. These files map font declarations directly to the Latin Modern OpenType font files in `assets/latex/fonts/`.
 
 ### `pgf.cfg`
 
@@ -100,5 +76,5 @@ Configures the PGF system layer to automatically use NemaTeX's dedicated driver 
 
 ### `pgfsys-nematex.def`
 
-PGF system driver for NemaTeX. Maps PGF drawing commands to direct PDF stream output via `\special`, defines picture lifecycle hooks (`\special{pdf:bcontent}` and `\special{pdf:econtent}`) for coordinate translation, interfaces with NemaTeX position-tracking primitives (`\savepos`, `\lastxpos`, `\lastypos`), and stubs resource definitions to prevent unsupported pdfTeX C-primitive invocations (`\pdfobj`).
+PGF system driver for NemaTeX. Maps PGF drawing commands to direct PDF stream output via `\special`, defines picture lifecycle hooks (`\special{pdf:bcontent}` and `\special{pdf:econtent}`) for coordinate translation, interfaces with NemaTeX position-tracking primitives (`\savepos`, `\lastxpos`, `\lastypos`), and stubs resource definitions to prevent unsupported pdfTeX C-primitive invocations (`\pdfobj`). Also tries to use our `\floatevald` primitive for faster math.
 

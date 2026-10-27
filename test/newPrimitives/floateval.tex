@@ -1,0 +1,123 @@
+\nonstopmode
+\catcode`\{=1 \catcode`\}=2 \catcode`\#=6 \catcode`\~=12
+\def\typ#1{\immediate\write-1 {#1}}
+
+\typ{START}
+
+\typ{FLOATEVAL TEST 1: existence}
+\show\floateval
+
+\typ{FLOATEVAL TEST 2: arithmetic precedence}
+\typ{\floateval{2 + 3 * 4}}
+\typ{\floateval{(2 + 3) * 4}}
+\typ{\floateval{2^3 + 1}}
+\typ{\floateval{2^(3 + 1)}}
+\typ{\floateval{10 / 2 - 1}}
+
+\typ{FLOATEVAL TEST 3: implicit multiplication and negation}
+\typ{\floateval{2(3 + 4)}}
+\typ{\floateval{(1 + 2)(3 + 4)}}
+\typ{\floateval{2 - 3}}
+\typ{\floateval{2(-3)}}
+\typ{\floateval{2pi > 6}}
+\typ{\floateval{2e > 5}}
+\typ{\floateval{1 / 2pi < 0.2}}
+\typ{\floateval{1 / 2*pi > 1.5}}
+\typ{\floateval{1 / 2(3)}}
+\typ{\floateval{1 / (1 + 2)pi > 1}}
+\typ{\floateval{2^3pi > 25}}
+
+\typ{FLOATEVAL TEST 4: registers, dimensions, glue, and boxes}
+\dimen0=12.5pt
+\count0=4
+\typ{\floateval{\dimen0}}
+\typ{\floateval{\dimen0 * \count0}}
+\baselineskip=14pt plus 2pt minus 1pt
+\typ{\floateval{\baselineskip}}
+\setbox0=\hbox{X}
+\typ{\floateval{\wd0 > 7}}
+
+\typ{FLOATEVAL TEST 5: modulo}
+\typ{\floateval{10 mod 3}}
+\typ{\floateval{mod(10, 3)}}
+\typ{\floateval{mod(-1, 4)}}
+\typ{\floateval{Mod(-1, 4)}}
+\typ{\floateval{10 Mod 3}}
+
+\typ{FLOATEVAL TEST 6: radian trigonometry and units}
+\typ{\floateval{sin(0)}}
+\typ{\floateval{sin(pi / 2)}}
+\typ{\floateval{cos(0)}}
+\typ{\floateval{sin(90deg)}}
+\typ{\floateval{sin(pi rad)}}
+\typ{\floateval{sin(pi r)}}
+\typ{\floateval{sec(0)}}
+\typ{\floateval{cot(pi / 4)}}
+
+\typ{FLOATEVAL TEST 7: vector and scalar geometry}
+\typ{\floateval{veclen(3, 4)}}
+\typ{\floateval{scalar(28.45274pt)}}
+
+\typ{FLOATEVAL TEST 8: bitwise operations}
+\typ{\floateval{5 & 3}}
+\typ{\floateval{5 | 2}}
+\typ{\floateval{bitxor(5, 3)}}
+\typ{\floateval{~0}}
+\typ{\floateval{bitnot(0)}}
+\typ{\floateval{1 << 4}}
+\typ{\floateval{16 >> 2}}
+
+\typ{FLOATEVAL TEST 9: number theory and relations}
+\typ{\floateval{gcd(42, 56)}}
+\typ{\floateval{isprime(31)}}
+\typ{\floateval{isprime(64)}}
+\typ{\floateval{isodd(7)}}
+\typ{\floateval{iseven(7)}}
+\typ{\floateval{real(4)}}
+\typ{\floateval{(4 = 4)}}
+\typ{\floateval{(4 == 4)}}
+\typ{\floateval{notequal(2, 3)}}
+\typ{\floateval{notgreater(2, 3)}}
+\typ{\floateval{notless(3, 2)}}
+\typ{\floateval{approxequalto(1.00005, 1.0)}}
+\typ{\floateval{approxequalto(1.0002, 1.0)}}
+
+\typ{FLOATEVAL TEST 10: base conversion}
+\typ{\floateval{bin(5)}}
+\typ{\floateval{oct(63)}}
+\typ{\floateval{hex(255)}}
+\typ{\floateval{Hex(255)}}
+
+\typ{FLOATEVAL TEST 11: arrays}
+\typ{\floateval{{{1, 2}, {3, 4}}[1][0]}}
+\typ{\floateval{{10, 20, 30,}[2]}}
+\typ{\floateval{{42}[0]}}
+\typ{\floateval{dim({10, 20, 30})}}
+\typ{\floateval{dim({{1, 2}, {3, 4}})}}
+
+\typ{FLOATEVAL TEST 12: physical units}
+\typ{\floateval{1in / 1pt}}
+\typ{\floateval{1cm / 1mm}}
+\typ{\floateval{2exp(3) > 10}}
+
+\typ{FLOATEVAL TEST 13: strings}
+\typ{\floateval{"north" == 'north'}}
+\typ{\floateval{strrepeat(3, "ha")}}
+
+\typ{FLOATEVAL TEST 14: short circuit and macro expansion}
+\typ{\floateval{0 ? sqrt(-1) : 42}}
+\typ{\floateval{1 || 1/0}}
+\typ{\floateval{0 && 1/0}}
+\def\foo{3}
+\def\bar{4}
+\typ{\floateval{\foo + \bar * 2}}
+
+\typ{FLOATEVAL TEST 15: full expandable edef}
+\edef\res{\floateval{2^10}}
+\typ{\res}
+
+\typ{FLOATEVAL TEST 16: division by zero error handling}
+\typ{\floateval{1 / 0}}
+
+\typ{END}
+\end

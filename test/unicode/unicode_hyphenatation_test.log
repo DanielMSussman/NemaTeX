@@ -1,0 +1,17 @@
+This is TeX, Version 3.141592653 (preloaded format=ua2plain 2026.10.27)  4 JUL 1776 12:00
+**unicode_hyphenatation_test
+
+(unicode_hyphenatation_test.tex
+START: Unicode Hyphenation Test
+Testing \showhyphens:
+
+Underfull \hbox (badness 10000) in paragraph at lines 21--21
+[] \tenrm książ-ka prze-pra-sza-my Rzecz-po-spo-li-ta do-świad-cze-ni
+e nie-pod-le-głość chrząszcz
+
+\hbox(7.2365+2.40874)x16383.99998, glue set 2217.89941 []
+
+Testing paragraph line breaking:
+END: Unicode Hyphenation Test
+[1] )
+Output written on [nothingness] (1 page, 0 bytes).

@@ -1,0 +1,27 @@
+This is TeX, Version 3.141592653 (preloaded format=ua2plain 2026.10.27)  4 JUL 1776 12:00
+**unicode_mixed_input
+(unicode_mixed_input.tex
+START
+ASCII: ASCII-Success
+Unicode text: café, naïve, résumé
+Unicode macro alpha: Alpha-UTF8
+Unicode macro resume: Resume-UTF8
+Caret text: é, ï, α, β
+Caret macro beta called via caret: Beta-Caret
+Caret macro beta called via UTF-8: Beta-Caret
+Six-caret text: é, γ, 😀
+Six-caret macro grin called via caret: Grin-SixCaret
+Six-caret macro grin called via UTF-8: Grin-SixCaret
+UTF-8 macro gamma called via four-caret: Gamma-Mixed
+UTF-8 macro gamma called via six-caret: Gamma-Mixed
+UTF-8 macro whale called via six-caret: Whale-UTF8
+PASS: control sequence \αmatches \α
+PASS: control sequence \😀 matches \😀
+PASS: strcmp 'α' matches 'α'
+PASS: strcmp 'γ' matches 'γ'
+PASS: strcmp '😀' matches '😀'
+PASS: strcmp 'café' matches 'café'
+PASS: strcmp 'naïve' matches 'naïve'
+END
+ [1] )
+Output written on [nothingness] (1 page, 0 bytes).

@@ -96,4 +96,47 @@
   \edef\pgf@image{\noexpand\includegraphics[\pgf@imageheight\pgf@imagewidth]{\pgf@filename}}%
 }
 
+% Acceleration for PGF math using native NemaTeX \floatevald (degree mode)
+% This turns native floating point eval on by default. To turn it off, in your `.tex` document just put
+% `\pgfmathnativedisable` somewhere... and then use `\pgfmathnativeenable` to turn it back on in the document
+
+\def\pgfmathnativeenable{%
+  \def\pgfmathparse##1{\edef\pgfmathresult{\floatevald{##1}}}%
+  \def\pgfmathqparse##1{\edef\pgfmathresult{\floatevald{##1}}}%
+}
+\def\pgfmathnativedisable{%
+  \ifx\pgfmath@orig@parse\@undefined\else
+    \let\pgfmathparse=\pgfmath@orig@parse
+    \let\pgfmathqparse=\pgfmath@orig@qparse
+  \fi
+}
+
+\ifx\pgfmathnonative\@undefined
+  \pgfmathnativeenable
+\fi
+
+\ifx\AddToHook\@undefined
+  \ifx\AtBeginDocument\@undefined
+  \else
+    \AtBeginDocument{%
+      \ifx\pgfmathnonative\@undefined
+        \pgfmathnativeenable
+      \fi
+    }%
+  \fi
+\else
+  \AddToHook{file/pgfmath.code.tex/after}{%
+    \let\pgfmath@orig@parse=\pgfmathparse
+    \let\pgfmath@orig@qparse=\pgfmathqparse
+    \ifx\pgfmathnonative\@undefined
+      \pgfmathnativeenable
+    \fi
+  }%
+  \AtBeginDocument{%
+    \ifx\pgfmathnonative\@undefined
+      \pgfmathnativeenable
+    \fi
+  }%
+\fi
+
 \endinput

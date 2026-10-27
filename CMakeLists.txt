@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.28)
 
-project(nematex VERSION 0.6.0
+project(nematex VERSION 0.13.0
     DESCRIPTION "tex82, but different"
     LANGUAGES CXX C)
 
@@ -15,17 +15,18 @@ list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 include(Dependencies)
 include(CompilerOptions)
 include(Profiler)
-include(AssetIndex)
+include(FileIndex)
+
+set(CMAKE_LINKER_TYPE MOLD)
+set(CMAKE_UNITY_BUILD ON)
 
 add_subdirectory(src)
 
 add_executable(${PROJECT_NAME} nematex.cpp)
 
-target_link_libraries(${PROJECT_NAME} PUBLIC TeXCore Press)
-
-target_link_options(${PROJECT_NAME} PRIVATE
-    "-Wl,--gc-sections"
-)
+target_link_libraries(${PROJECT_NAME} PUBLIC TeXCore Press nematex_compile_options)
+target_precompile_headers(${PROJECT_NAME} REUSE_FROM CorePCH)
+add_dependencies(${PROJECT_NAME} generate_file_indices)
 
 include(Formats)
 
